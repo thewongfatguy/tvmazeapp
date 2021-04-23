@@ -14,6 +14,12 @@ final class RouteTest: XCTestCase {
 
   let baseURL = URL(string: "https://api.tvmaze.com")!
 
+  func test_Build_ShowsRoute() {
+    let route = Route.shows(10)
+    let request = route.urlRequest(withBaseURL: baseURL)
+    assertSnapshot(matching: request, as: .raw)
+  }
+
   func test_Build_SearchShowsRoute() {
     let route = Route.searchShows("girl")
     let request = route.urlRequest(withBaseURL: baseURL)

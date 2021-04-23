@@ -25,6 +25,10 @@ extension AppEnvironment {
 extension TvMazeApiClient {
   static var failing: Self {
     Self(
+      shows: {
+        XCTFail("\(Self.self).shows(\($0)) is not implemented.")
+        return Empty().eraseToAnyPublisher()
+      },
       searchShows: {
         XCTFail("\(Self.self).searchShows(\($0)) is not implemented.")
         return Empty().eraseToAnyPublisher()

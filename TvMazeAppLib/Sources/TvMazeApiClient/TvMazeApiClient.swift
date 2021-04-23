@@ -2,6 +2,7 @@ import Combine
 import Foundation
 
 public struct TvMazeApiClient {
+  public var shows: (Int) -> AnyPublisher<[Show], Error>
   public var searchShows: (String) -> AnyPublisher<[ShowSearch], Error>
 }
 
@@ -10,6 +11,9 @@ extension TvMazeApiClient {
     let baseURL = URL(string: "https://api.tvmaze.com")!
 
     return Self(
+      shows: { page in
+        TvMazeApiClient.apiRequest(baseURL: baseURL, route: .shows(page)).apiDecoded()
+      },
       searchShows: { term in
         TvMazeApiClient.apiRequest(
           baseURL: baseURL,

@@ -38,6 +38,10 @@ extension Route {
 }
 
 extension Route {
+  static func shows(_ page: Int) -> Route {
+    Route(path: "/shows", method: .get, query: [URLQueryItem(name: "page", value: "\(page)")])
+  }
+
   static func searchShows(_ term: String) -> Route {
     Route(
       path: "/search/shows",

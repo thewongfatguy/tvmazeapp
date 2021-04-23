@@ -1,7 +1,7 @@
 import Combine
 import XCTest
 
-@testable import TvMazeApiClient
+@testable import ApiClient
 @testable import TvMazeAppLib
 
 func withEnv(
@@ -22,7 +22,7 @@ extension AppEnvironment {
   }
 }
 
-extension TvMazeApiClient {
+extension ApiClient {
   static var failing: Self {
     Self(
       shows: {

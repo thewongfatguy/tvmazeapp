@@ -1,21 +1,32 @@
 import Combine
 import Foundation
 
-public struct TvMazeApiClient {
-  public var shows: (Int) -> AnyPublisher<[Show], Error>
+public struct FetchShowsResult {
+    public let page: Int
+    public let result: [Show]
+}
+
+public struct ApiClient {
+  public var shows: (Int) -> AnyPublisher<FetchShowsResult, Error>
   public var searchShows: (String) -> AnyPublisher<[ShowSearch], Error>
 }
 
-extension TvMazeApiClient {
+extension ApiClient {
   public static var live: Self {
     let baseURL = URL(string: "https://api.tvmaze.com")!
 
     return Self(
       shows: { page in
-        TvMazeApiClient.apiRequest(baseURL: baseURL, route: .shows(page)).apiDecoded()
+        ApiClient
+            .apiRequest(baseURL: baseURL, route: .shows(page))
+            .apiDecoded(as: [Show].self)
+            .map { shows in
+                FetchShowsResult(page: page, result: shows)
+            }
+            .eraseToAnyPublisher()
       },
       searchShows: { term in
-        TvMazeApiClient.apiRequest(
+        ApiClient.apiRequest(
           baseURL: baseURL,
           route: .searchShows(term)
         )
@@ -25,7 +36,7 @@ extension TvMazeApiClient {
   }
 }
 
-extension TvMazeApiClient {
+extension ApiClient {
   private static func apiRequest(
     baseURL: URL,
     route: Route

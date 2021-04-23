@@ -1,8 +1,8 @@
 import Foundation
-import TvMazeApiClient
+import ApiClient
 
 public struct AppEnvironment {
-  public var apiClient: TvMazeApiClient
+  public var apiClient: ApiClient
 }
 
 #if DEBUG

@@ -8,7 +8,7 @@
 import SnapshotTesting
 import XCTest
 
-@testable import TvMazeApiClient
+@testable import ApiClient
 
 final class RouteTest: XCTestCase {
 

@@ -7,9 +7,9 @@ let package = Package(
   name: "TvMazeAppLib",
   platforms: [.iOS(.v13)],
   products: [
+    .library(name: "ApiClient", targets: ["ApiClient"]),
     .library(name: "PaginationSink", targets: ["PaginationSink"]),
     .library(name: "TvMazeAppLib", targets: ["TvMazeAppLib"]),
-    .library(name: "TvMazeApiClient", targets: ["TvMazeApiClient"]),
   ],
   dependencies: [
     .package(
@@ -19,6 +19,13 @@ let package = Package(
     .package(url: "https://github.com/onevcat/Kingfisher.git", from: "6.0.0"),
   ],
   targets: [
+    // ApiClient
+    .target(name: "ApiClient"),
+    .testTarget(
+      name: "ApiClientTests",
+      dependencies: ["ApiClient", "SnapshotTesting"]
+    ),
+
     // PaginationSink
     .target(name: "PaginationSink"),
     .testTarget(name: "PaginationSinkTests", dependencies: ["PaginationSink", "TestSupport"]),
@@ -26,10 +33,11 @@ let package = Package(
     // TestSupport
     .target(name: "TestSupport"),
 
+    // TvMazeAppLib
     .target(
       name: "TvMazeAppLib",
       dependencies: [
-        "TvMazeApiClient",
+        "ApiClient",
         "TinyConstraints",
         "Kingfisher",
       ]
@@ -37,12 +45,5 @@ let package = Package(
     .testTarget(
       name: "TvMazeAppLibTests",
       dependencies: ["TvMazeAppLib"]),
-
-    // TvMazeApiClient
-    .target(name: "TvMazeApiClient"),
-    .testTarget(
-      name: "TvMazeApiClientTests",
-      dependencies: ["TvMazeApiClient", "SnapshotTesting"]
-    ),
   ]
 )

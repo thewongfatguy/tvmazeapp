@@ -15,7 +15,7 @@ final class ShowItemCell: UICollectionViewCell {
     $0.backgroundColor = UIColor.black.withAlphaComponent(0.8)
   }
 
-  private let nameLabel = with(UILabel()) {
+  let nameLabel = with(UILabel()) {
     $0.numberOfLines = 1
     $0.font = .preferredFont(forTextStyle: .headline)
     $0.textColor = .white

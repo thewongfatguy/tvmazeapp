@@ -20,9 +20,9 @@ public struct Show: Decodable {
   public let language: String
   public let genres: [String]
   public let status: String
-  public let runtime: Int
+  //  public let runtime: Int?
   public let premiered: String
-  public let officialSite: URL
+  //  public let officialSite: URL?
   public let schedule: Schedule
 }
 

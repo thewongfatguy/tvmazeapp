@@ -1,6 +1,11 @@
+import Combine
+import TvMazeApiClient
 import UIKit
 
 final class ShowsListViewController: UICollectionViewController {
+
+  private var shows: [Show] = []
+  private var bag = Set<AnyCancellable>()
 
   init() {
     let layout = UICollectionViewFlowLayout()
@@ -31,13 +36,22 @@ final class ShowsListViewController: UICollectionViewController {
     collectionView.register(
       ShowItemCell.self, forCellWithReuseIdentifier: ShowItemCell.reuseIdentifier)
 
-    Env.apiClient.searchShows("")
+    Env.apiClient.shows(0)
+      .receive(on: DispatchQueue.main)
+      .sink(
+        receiveCompletion: { completion in dump(completion) },
+        receiveValue: { shows in
+          self.shows = shows
+          self.collectionView.reloadData()
+        }
+      )
+      .store(in: &bag)
   }
 
   override func collectionView(
     _ collectionView: UICollectionView, numberOfItemsInSection section: Int
   ) -> Int {
-    19
+    shows.count
   }
 
   override func collectionView(
@@ -46,7 +60,7 @@ final class ShowsListViewController: UICollectionViewController {
     let cell =
       collectionView.dequeueReusableCell(
         withReuseIdentifier: ShowItemCell.reuseIdentifier, for: indexPath) as! ShowItemCell
-    cell.backgroundColor = .red
+    cell.nameLabel.text = shows[indexPath.item].name
     return cell
   }
 }

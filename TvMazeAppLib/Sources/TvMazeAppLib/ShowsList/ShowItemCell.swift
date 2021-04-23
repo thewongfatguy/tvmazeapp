@@ -1,3 +1,4 @@
+import Kingfisher
 import TinyConstraints
 import UIKit
 
@@ -9,13 +10,22 @@ func with<A>(_ object: A, apply: (inout A) -> Void) -> A {
 
 final class ShowItemCell: UICollectionViewCell {
 
-  private let posterImageView = UIImageView()
-
-  private let nameOverlayView = with(UIView()) {
-    $0.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+  struct ViewModel {
+    let name: String
+    let posterImageURL: URL
   }
 
-  let nameLabel = with(UILabel()) {
+  private let posterImageView = with(UIImageView()) {
+    $0.contentMode = .scaleAspectFill
+    $0.clipsToBounds = true
+    $0.kf.indicatorType = .activity
+  }
+
+  private let nameOverlayView = with(UIView()) {
+    $0.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+  }
+
+  private let nameLabel = with(UILabel()) {
     $0.numberOfLines = 1
     $0.font = .preferredFont(forTextStyle: .headline)
     $0.textColor = .white
@@ -33,6 +43,17 @@ final class ShowItemCell: UICollectionViewCell {
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    posterImageView.kf.cancelDownloadTask()
+    nameLabel.text = nil
+  }
+
+  func bind(to viewModel: ViewModel) {
+    posterImageView.kf.setImage(with: viewModel.posterImageURL)
+    nameLabel.text = viewModel.name
   }
 
   private func setupViewHierarchy() {

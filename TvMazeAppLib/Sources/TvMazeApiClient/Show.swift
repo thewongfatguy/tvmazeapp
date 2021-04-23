@@ -24,6 +24,12 @@ public struct Show: Decodable {
   public let premiered: String
   //  public let officialSite: URL?
   public let schedule: Schedule
+  public let image: Image
+
+  public struct Image: Decodable {
+    public let medium: URL
+    public let original: URL
+  }
 }
 
 public struct Schedule: Decodable {

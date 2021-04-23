@@ -13,7 +13,7 @@ final class ShowsListViewController: UICollectionViewController {
     let width = (UIScreen.main.bounds.width - 60) / 2
     layout.itemSize = CGSize(
       width: (UIScreen.main.bounds.width - 60) / 2,
-      height: width * 16 / 9
+      height: width * 1.4
     )
     layout.minimumLineSpacing = 20
     layout.minimumInteritemSpacing = 20
@@ -60,7 +60,9 @@ final class ShowsListViewController: UICollectionViewController {
     let cell =
       collectionView.dequeueReusableCell(
         withReuseIdentifier: ShowItemCell.reuseIdentifier, for: indexPath) as! ShowItemCell
-    cell.nameLabel.text = shows[indexPath.item].name
+
+    let show = shows[indexPath.item]
+    cell.bind(to: .init(name: show.name, posterImageURL: show.image.medium))
     return cell
   }
 }

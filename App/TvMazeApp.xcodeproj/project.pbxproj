@@ -3,20 +3,19 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		796AD38B2633350300240507 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796AD38A2633350300240507 /* AppDelegate.swift */; };
-		796AD38F2633350300240507 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796AD38E2633350300240507 /* ViewController.swift */; };
 		796AD3942633350300240507 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 796AD3932633350300240507 /* Assets.xcassets */; };
 		796AD3972633350300240507 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 796AD3952633350300240507 /* LaunchScreen.storyboard */; };
+		796AD3A6263341F100240507 /* TvMazeAppLib in Frameworks */ = {isa = PBXBuildFile; productRef = 796AD3A5263341F100240507 /* TvMazeAppLib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		796AD3872633350300240507 /* TvMazeApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TvMazeApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		796AD38A2633350300240507 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		796AD38E2633350300240507 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		796AD3932633350300240507 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		796AD3962633350300240507 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		796AD3982633350300240507 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -27,6 +26,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				796AD3A6263341F100240507 /* TvMazeAppLib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -38,6 +38,7 @@
 			children = (
 				796AD3892633350300240507 /* TvMazeApp */,
 				796AD3882633350300240507 /* Products */,
+				796AD3A4263341F100240507 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -53,12 +54,18 @@
 			isa = PBXGroup;
 			children = (
 				796AD38A2633350300240507 /* AppDelegate.swift */,
-				796AD38E2633350300240507 /* ViewController.swift */,
 				796AD3932633350300240507 /* Assets.xcassets */,
 				796AD3952633350300240507 /* LaunchScreen.storyboard */,
 				796AD3982633350300240507 /* Info.plist */,
 			);
 			path = TvMazeApp;
+			sourceTree = "<group>";
+		};
+		796AD3A4263341F100240507 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -77,6 +84,9 @@
 			dependencies = (
 			);
 			name = TvMazeApp;
+			packageProductDependencies = (
+				796AD3A5263341F100240507 /* TvMazeAppLib */,
+			);
 			productName = TvMazeApp;
 			productReference = 796AD3872633350300240507 /* TvMazeApp.app */;
 			productType = "com.apple.product-type.application";
@@ -130,7 +140,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				796AD38F2633350300240507 /* ViewController.swift in Sources */,
 				796AD38B2633350300240507 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -273,7 +282,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ELTTE7K8TT;
 				INFOPLIST_FILE = TvMazeApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -293,7 +302,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ELTTE7K8TT;
 				INFOPLIST_FILE = TvMazeApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -327,6 +336,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		796AD3A5263341F100240507 /* TvMazeAppLib */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TvMazeAppLib;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 796AD37F2633350200240507 /* Project object */;
 }

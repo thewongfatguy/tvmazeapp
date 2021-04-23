@@ -1,4 +1,3 @@
-import TvMazeApiClient
 import UIKit
 
 public final class AppCoordinator {
@@ -13,8 +12,4 @@ public final class AppCoordinator {
     window.rootViewController = UIViewController()
     window.makeKeyAndVisible()
   }
-}
-
-public struct AppEnvironment {
-  public var apiClient: TvMazeApiClient
 }

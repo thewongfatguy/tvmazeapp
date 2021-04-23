@@ -1,12 +1,16 @@
-import Foundation
 import ApiClient
+import Foundation
 
 public struct AppEnvironment {
   public var apiClient: ApiClient
+
+  public init(apiClient: ApiClient) {
+    self.apiClient = apiClient
+  }
 }
 
 #if DEBUG
-  var Env = AppEnvironment(apiClient: .live)
+  public var Env = AppEnvironment(apiClient: .live)
 #else
-  let Env = AppEnvironment(apiClient: .live)
+  public let Env = AppEnvironment(apiClient: .live)
 #endif

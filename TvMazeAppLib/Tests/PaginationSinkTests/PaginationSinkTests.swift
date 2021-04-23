@@ -1,8 +1,8 @@
-import PaginationSink
 import Combine
 import Foundation
-import XCTest
+import PaginationSink
 import TestSupport
+import XCTest
 
 class PaginationSinkTests: XCTestCase {
   func testPaginationSink_NextPageTwice() throws {
@@ -41,11 +41,13 @@ class PaginationSinkTests: XCTestCase {
       valuesFromEnvelope: { envelope in [envelope] },
       cursorFromEnvelope: { cursor in cursor },
       requestFromCursor: { cursor -> AnyPublisher<Result<Int, TestError>, Never> in
-        let result: Result<Int, TestError> = cursor > 1
+        let result: Result<Int, TestError> =
+          cursor > 1
           ? .failure(.init())
           : .success(cursor)
 
-        return Future<Result<Int, TestError>, Never>({ promise in promise(.success(result)) }).eraseToAnyPublisher()
+        return Future<Result<Int, TestError>, Never>({ promise in promise(.success(result)) })
+          .eraseToAnyPublisher()
       },
       actions: { input in
         input.refresh.send(())
@@ -77,7 +79,9 @@ private struct PaginationSinkInput {
 }
 
 private enum PaginationSinkEvent<Value: Equatable, Err: Swift.Error>: Equatable {
-  static func == (lhs: PaginationSinkEvent<Value, Err>, rhs: PaginationSinkEvent<Value, Err>) -> Bool {
+  static func == (lhs: PaginationSinkEvent<Value, Err>, rhs: PaginationSinkEvent<Value, Err>)
+    -> Bool
+  {
     switch (lhs, rhs) {
     case let (.isRefreshing(l), .isRefreshing(r)): return l == r
     case let (.isLoadingNextPage(l), .isLoadingNextPage(r)): return l == r

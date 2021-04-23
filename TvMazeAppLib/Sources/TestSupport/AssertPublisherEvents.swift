@@ -21,12 +21,15 @@ public func assertPublisherEvents<T: Equatable>(
 
   subject.collect()
     .receive(on: DispatchQueue.main)
-    .sink(receiveCompletion: { _ in
-      completeExpectation.fulfill()
-    }, receiveValue: { allEvents in
-      events = allEvents
-      valueExpectation.fulfill()
-    })
+    .sink(
+      receiveCompletion: { _ in
+        completeExpectation.fulfill()
+      },
+      receiveValue: { allEvents in
+        events = allEvents
+        valueExpectation.fulfill()
+      }
+    )
     .store(in: &cancellables)
 
   trigger()

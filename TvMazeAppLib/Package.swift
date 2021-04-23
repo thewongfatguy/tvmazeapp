@@ -31,13 +31,14 @@ let package = Package(
     .testTarget(name: "PaginationSinkTests", dependencies: ["PaginationSink", "TestSupport"]),
 
     // TestSupport
-    .target(name: "TestSupport"),
+    .target(name: "TestSupport", dependencies: ["TvMazeAppLib", "ApiClient"]),
 
     // TvMazeAppLib
     .target(
       name: "TvMazeAppLib",
       dependencies: [
         "ApiClient",
+        "PaginationSink",
         "TinyConstraints",
         "Kingfisher",
       ]

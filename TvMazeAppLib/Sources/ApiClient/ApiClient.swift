@@ -2,13 +2,21 @@ import Combine
 import Foundation
 
 public struct FetchShowsResult {
-    public let page: Int
-    public let result: [Show]
+  public let page: Int
+  public let result: [Show]
 }
 
 public struct ApiClient {
   public var shows: (Int) -> AnyPublisher<FetchShowsResult, Error>
   public var searchShows: (String) -> AnyPublisher<[ShowSearch], Error>
+
+  public init(
+    shows: @escaping (Int) -> AnyPublisher<FetchShowsResult, Error>,
+    searchShows: @escaping (String) -> AnyPublisher<[ShowSearch], Error>
+  ) {
+    self.shows = shows
+    self.searchShows = searchShows
+  }
 }
 
 extension ApiClient {
@@ -18,12 +26,12 @@ extension ApiClient {
     return Self(
       shows: { page in
         ApiClient
-            .apiRequest(baseURL: baseURL, route: .shows(page))
-            .apiDecoded(as: [Show].self)
-            .map { shows in
-                FetchShowsResult(page: page, result: shows)
-            }
-            .eraseToAnyPublisher()
+          .apiRequest(baseURL: baseURL, route: .shows(page))
+          .apiDecoded(as: [Show].self)
+          .map { shows in
+            FetchShowsResult(page: page, result: shows)
+          }
+          .eraseToAnyPublisher()
       },
       searchShows: { term in
         ApiClient.apiRequest(

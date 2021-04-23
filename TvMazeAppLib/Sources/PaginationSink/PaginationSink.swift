@@ -10,11 +10,12 @@ public struct PaginationSink<Value, Err: Swift.Error> {
   /// An `Observable` that triggers when an error occurs during the request. The sequence should never fail.
   public let error: AnyPublisher<Err, Never>
 
-  private init(isRefreshing: AnyPublisher<Bool, Never>,
-               isLoadingNextPage: AnyPublisher<Bool, Never>,
-               values: AnyPublisher<[Value], Never>,
-               error: AnyPublisher<Err, Never>)
-  {
+  private init(
+    isRefreshing: AnyPublisher<Bool, Never>,
+    isLoadingNextPage: AnyPublisher<Bool, Never>,
+    values: AnyPublisher<[Value], Never>,
+    error: AnyPublisher<Err, Never>
+  ) {
     self.isRefreshing = isRefreshing
     self.isLoadingNextPage = isLoadingNextPage
     self.values = values
@@ -50,15 +51,18 @@ public struct PaginationSink<Value, Err: Swift.Error> {
 
     let _error = PassthroughSubject<Err, Never>()
 
-    let values = refreshTrigger
+    let values =
+      refreshTrigger
       .map { _ -> AnyPublisher<[Value], Never> in
         cursor = 1
 
-        return nextPageTrigger
+        return
+          nextPageTrigger
           .prepend(())
           .map { _ -> AnyPublisher<Result<Envelope, Err>, Never> in
             // TODO: Track
-            let activityToTrack = cursor == 1
+            let activityToTrack =
+              cursor == 1
               ? _isRefreshing
               : _isLoadingNextPage
             activityToTrack.send(true)

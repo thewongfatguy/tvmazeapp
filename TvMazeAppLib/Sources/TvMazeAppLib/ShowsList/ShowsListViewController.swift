@@ -1,25 +1,62 @@
+import ApiClient
 import Combine
-import TvMazeApiClient
 import UIKit
 
 final class ShowsListViewController: UICollectionViewController {
 
-  private var shows: [Show] = []
+  // MARK: - Types
+
+  private enum Section: Hashable {
+    case main
+  }
+
+  private typealias DataSource = UICollectionViewDiffableDataSource<
+    Section, ShowListViewModel.Output.Show
+  >
+  private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, ShowListViewModel.Output.Show>
+
+  private let refreshControl = UIRefreshControl()
+
+  static func makeCollectionViewLayout() -> UICollectionViewLayout {
+    let itemSize = NSCollectionLayoutSize(
+      widthDimension: .fractionalWidth(0.48),
+      heightDimension: .fractionalHeight(1.0)
+    )
+
+    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+    let groupSize = NSCollectionLayoutSize(
+      widthDimension: .fractionalWidth(1.0),
+      heightDimension: .absolute(230)
+    )
+
+    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+    group.interItemSpacing = NSCollectionLayoutSpacing.flexible(8)
+    group.edgeSpacing = NSCollectionLayoutEdgeSpacing(
+      leading: nil, top: nil, trailing: nil, bottom: .fixed(20))
+
+    let section = NSCollectionLayoutSection(group: group)
+    section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20)
+    let layout = UICollectionViewCompositionalLayout(section: section)
+    return layout
+  }
+
+  private let viewModel: ShowListViewModel
   private var bag = Set<AnyCancellable>()
 
-  init() {
-    let layout = UICollectionViewFlowLayout()
+  private lazy var dataSource = DataSource(collectionView: collectionView) {
+    collectionView, indexPath, show -> UICollectionViewCell? in
+    let cell =
+      collectionView.dequeueReusableCell(
+        withReuseIdentifier: ShowItemCell.reuseIdentifier, for: indexPath) as! ShowItemCell
+    cell.bind(to: show)
+    return cell
+  }
 
-    let width = (UIScreen.main.bounds.width - 60) / 2
-    layout.itemSize = CGSize(
-      width: (UIScreen.main.bounds.width - 60) / 2,
-      height: width * 1.4
-    )
-    layout.minimumLineSpacing = 20
-    layout.minimumInteritemSpacing = 20
-    layout.sectionInset = .init(top: 20, left: 20, bottom: 20, right: 20)
-
-    super.init(collectionViewLayout: layout)
+  init(viewModel: ShowListViewModel = .default) {
+    self.viewModel = viewModel
+    super.init(collectionViewLayout: Self.makeCollectionViewLayout())
   }
 
   @available(*, unavailable)
@@ -27,43 +64,57 @@ final class ShowsListViewController: UICollectionViewController {
     fatalError("init(coder:) has not been implemented")
   }
 
+  private let refreshSubject = PassthroughSubject<Void, Never>()
+  private let loadNextPageSubject = PassthroughSubject<Void, Never>()
+
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    collectionView.backgroundColor = .white
+    collectionView.backgroundColor = .systemBackground
     title = "TvMaze App"
 
     collectionView.register(
       ShowItemCell.self, forCellWithReuseIdentifier: ShowItemCell.reuseIdentifier)
+    collectionView.refreshControl = refreshControl
+    refreshControl.addTarget(self, action: #selector(refresh), for: .primaryActionTriggered)
 
-    Env.apiClient.shows(0)
+    let input = ShowListViewModel.Input(
+      refresh: refreshSubject.eraseToAnyPublisher(),
+      loadNextPage: loadNextPageSubject.eraseToAnyPublisher()
+    )
+
+    let output = viewModel.transform(input)
+
+    output.shows
       .receive(on: DispatchQueue.main)
-      .sink(
-        receiveCompletion: { completion in dump(completion) },
-        receiveValue: { shows in
-          self.shows = shows
-          self.collectionView.reloadData()
-        }
-      )
+      .sink(receiveValue: { [weak self] shows in
+        var snapshot = Snapshot()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(shows)
+        self?.dataSource.apply(snapshot)
+      })
       .store(in: &bag)
+
+    output.isRefreshing
+      .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] isRefreshing in
+        if isRefreshing {
+          self?.refreshControl.beginRefreshing()
+        } else {
+          self?.refreshControl.endRefreshing()
+        }
+      }.store(in: &bag)
+
+    output.error.sink { dump($0) }
+      .store(in: &bag)
+
+    refresh()
   }
 
-  override func collectionView(
-    _ collectionView: UICollectionView, numberOfItemsInSection section: Int
-  ) -> Int {
-    shows.count
-  }
-
-  override func collectionView(
-    _ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath
-  ) -> UICollectionViewCell {
-    let cell =
-      collectionView.dequeueReusableCell(
-        withReuseIdentifier: ShowItemCell.reuseIdentifier, for: indexPath) as! ShowItemCell
-
-    let show = shows[indexPath.item]
-    cell.bind(to: .init(name: show.name, posterImageURL: show.image.medium))
-    return cell
+  @objc
+  private func refresh() {
+    refreshSubject.send()
   }
 }
 

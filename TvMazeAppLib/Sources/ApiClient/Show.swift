@@ -14,21 +14,21 @@ public struct ShowSearch: Decodable {
 
 public struct Show: Decodable, Equatable {
   public let id: Int
-  public let url: URL
+  //  public let url: URL
   public let name: String
-  public let type: String
-  public let language: String
-  public let genres: [String]
-  public let status: String
+  //  public let type: String
+  //  public let language: String
+  //  public let genres: [String]
+  //  public let status: String
   //  public let runtime: Int?
-  public let premiered: String
+  //  public let premiered: String
   //  public let officialSite: URL?
-  public let schedule: Schedule
+  //  public let schedule: Schedule
   public let image: Image
 
   public struct Image: Decodable, Equatable {
     public let medium: URL
-    public let original: URL
+    //    public let original: URL
   }
 }
 

@@ -10,12 +10,8 @@ func with<A>(_ object: A, apply: (inout A) -> Void) -> A {
 
 final class ShowItemCell: UICollectionViewCell {
 
-  struct ViewModel {
-    let name: String
-    let posterImageURL: URL
-  }
-
   private let posterImageView = with(UIImageView()) {
+    $0.backgroundColor = .secondarySystemBackground
     $0.contentMode = .scaleAspectFill
     $0.clipsToBounds = true
     $0.kf.indicatorType = .activity
@@ -51,8 +47,8 @@ final class ShowItemCell: UICollectionViewCell {
     nameLabel.text = nil
   }
 
-  func bind(to viewModel: ViewModel) {
-    posterImageView.kf.setImage(with: viewModel.posterImageURL)
+  func bind(to viewModel: ShowListViewModel.Output.Show) {
+    posterImageView.kf.setImage(with: viewModel.posterImage)
     nameLabel.text = viewModel.name
   }
 

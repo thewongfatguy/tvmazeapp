@@ -1,6 +1,5 @@
-import XCTest
-
 import TvMazeAppLibTests
+import XCTest
 
 var tests = [XCTestCaseEntry]()
 tests += TvMazeAppLibTests.allTests()

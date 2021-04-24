@@ -3,10 +3,6 @@ import Foundation
 
 public struct AppEnvironment {
   public var apiClient: ApiClient
-
-  public init(apiClient: ApiClient) {
-    self.apiClient = apiClient
-  }
 }
 
 #if DEBUG

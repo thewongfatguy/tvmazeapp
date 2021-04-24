@@ -7,14 +7,18 @@ import XCTest
 
 final class ShowListViewModelTests: XCTestCase {
 
-  func test_Refresh_ReturnsError() {
+  var viewModel: ShowListViewModel!
+
+  override func setUp() {
     Env = .failing
 
+    viewModel = ShowListViewModel()
+  }
+
+  func test_Refresh_ReturnsError() {
     struct _Error: Error, Equatable {}
 
     Env.apiClient.shows = { _ in Fail(error: _Error()).eraseToAnyPublisher() }
-
-    let viewModel = ShowListViewModel()
 
     let events = await(viewModel.refresh())
 
@@ -31,21 +35,14 @@ final class ShowListViewModelTests: XCTestCase {
   }
 
   func test_Refresh_ReturnsShowList() {
-    Env = .failing
-
-    let show = Show(
-      id: 1,
-      name: "Game of Thrones",
-      image: Show.Image(medium: URL(fileURLWithPath: ""))
-    )
+    let show = Show.stub()
 
     Env.apiClient.shows = { _ in
-      Just(FetchShowsResult(page: 0, result: [show]))
+      Just(FetchShowsResult.stub(page: 0, result: [show]))
         .setFailureType(to: Error.self)
         .eraseToAnyPublisher()
     }
 
-    let viewModel = ShowListViewModel()
     let events = await(viewModel.refresh())
 
     XCTAssertEqual(
@@ -58,6 +55,114 @@ final class ShowListViewModelTests: XCTestCase {
     )
   }
 
+  func test_LoadNextPage_ReturnsShowList() {
+    let show = Show.stub()
+    Env.apiClient.shows = { page in
+      Just(FetchShowsResult.stub(page: page, result: [show]))
+        .setFailureType(to: Error.self)
+        .eraseToAnyPublisher()
+    }
+
+    let events = await(viewModel.loadNextPage())
+
+    XCTAssertEqual(
+      events,
+      [
+        .isLoadingNextPage(true),
+        .showsLoaded(.success([ShowListViewModel.Output.Show(show: show)]), source: .loadNextPage),
+        .isLoadingNextPage(false),
+      ]
+    )
+  }
+
+  func test_LoadNextPage_ReturnsError() {
+    struct _Error: Error, Equatable {}
+
+    Env.apiClient.shows = { _ in
+      Fail(error: _Error())
+        .eraseToAnyPublisher()
+    }
+
+    let events = await(viewModel.loadNextPage())
+
+    XCTAssertEqual(
+      events,
+      [
+        .isLoadingNextPage(true),
+        .showsLoaded(.failure(_Error() as NSError), source: .loadNextPage),
+        .isLoadingNextPage(false),
+      ]
+    )
+  }
+
+  func test_Search_WithEmptyTerm_ShouldReturnNothing() {
+    let events = await(viewModel.search(""))
+    XCTAssertTrue(events.isEmpty)
+  }
+
+  func test_Search_ShouldReturnListOfShows() {
+    Env.apiClient.searchShows = { _ in
+      Just([ShowSearch(score: 1, show: .stub())])
+        .setFailureType(to: Error.self)
+        .eraseToAnyPublisher()
+    }
+
+    let events = await(viewModel.search("game of"))
+    XCTAssertEqual(
+      events,
+      [
+        .showsLoaded(.success([.init(show: .stub())]), source: .search)
+      ]
+    )
+    XCTAssertTrue(viewModel.isInSearchMode)
+  }
+
+  func test_Search_ReturnsError() {
+    struct _Error: Error, Equatable {}
+
+    Env.apiClient.searchShows = { _ in
+      Fail(error: _Error())
+        .eraseToAnyPublisher()
+    }
+
+    let events = await(viewModel.search("game of"))
+    XCTAssertEqual(
+      events,
+      [
+        .showsLoaded(.failure(_Error() as NSError), source: .search)
+      ]
+    )
+    XCTAssertTrue(viewModel.isInSearchMode)
+  }
+
+  func test_Refresh_ShouldSetSearchModeToFalse() {
+    Env.apiClient.searchShows = { _ in Empty().eraseToAnyPublisher() }
+    _ = await(viewModel.search("game of"))
+    XCTAssertTrue(viewModel.isInSearchMode)
+
+    Env.apiClient.shows = { _ in Empty().eraseToAnyPublisher() }
+    _ = await(viewModel.refresh())
+    XCTAssertFalse(viewModel.isInSearchMode)
+  }
+}
+
+extension Show {
+  static func stub(
+    id: Int = 1, name: String = "Game of Thrones",
+    image: Show.Image = Show.Image(medium: URL(fileURLWithPath: ""))
+  ) -> Show {
+    Show(
+      id: id,
+      name: name,
+      image: image
+    )
+  }
+}
+
+extension FetchShowsResult {
+  static func stub(page: Int = 1, result: [Show] = [.stub()]) -> FetchShowsResult {
+    FetchShowsResult(page: page, result: result)
+  }
 }
 
 extension XCTestCase {

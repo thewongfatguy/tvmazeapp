@@ -1,9 +1,10 @@
-import ApiClient
 import Combine
-import TvMazeAppLib
 import XCTest
 
-public func withEnv(
+@testable import ApiClient
+@testable import TvMazeAppLib
+
+func withEnv(
   _ update: (inout AppEnvironment) -> Void,
   execute: () -> Void
 ) {
@@ -14,7 +15,7 @@ public func withEnv(
 }
 
 extension AppEnvironment {
-  public static var failing: Self {
+  static var failing: Self {
     Self(
       apiClient: .failing
     )
@@ -22,7 +23,7 @@ extension AppEnvironment {
 }
 
 extension ApiClient {
-  public static var failing: Self {
+  static var failing: Self {
     Self(
       shows: {
         XCTFail("\(Self.self).shows(\($0)) is not implemented.")

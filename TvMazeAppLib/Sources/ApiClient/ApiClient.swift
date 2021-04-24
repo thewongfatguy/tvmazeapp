@@ -12,14 +12,6 @@ public struct FetchShowsResult {
 public struct ApiClient {
   public var shows: (Int) -> AnyPublisher<FetchShowsResult, Error>
   public var searchShows: (String) -> AnyPublisher<[ShowSearch], Error>
-
-  public init(
-    shows: @escaping (Int) -> AnyPublisher<FetchShowsResult, Error>,
-    searchShows: @escaping (String) -> AnyPublisher<[ShowSearch], Error>
-  ) {
-    self.shows = shows
-    self.searchShows = searchShows
-  }
 }
 
 extension ApiClient {

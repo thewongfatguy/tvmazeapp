@@ -18,7 +18,7 @@ final class ShowsListViewController: UICollectionViewController {
   private let refreshControl = UIRefreshControl()
   private lazy var searchController = with(UISearchController(searchResultsController: nil)) {
     $0.searchBar.autocapitalizationType = .none
-    $0.searchResultsUpdater = self
+    $0.searchBar.delegate = self
     $0.delegate = self
     $0.obscuresBackgroundDuringPresentation = false
   }
@@ -72,8 +72,6 @@ final class ShowsListViewController: UICollectionViewController {
     fatalError("init(coder:) has not been implemented")
   }
 
-  private let _searchSubject = PassthroughSubject<String, Never>()
-
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -85,13 +83,6 @@ final class ShowsListViewController: UICollectionViewController {
     collectionView.refreshControl = refreshControl
     refreshControl.addTarget(self, action: #selector(refresh), for: .primaryActionTriggered)
     navigationItem.searchController = searchController
-
-    _searchSubject
-      .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
-      .removeDuplicates()
-      .flatMap { term in self.viewModel.search(term) }
-      .handleUIChanges(on: self, with: ShowsListViewController.handleViewModelOutput)
-      .store(in: &bag)
 
     refresh()
   }
@@ -111,8 +102,7 @@ final class ShowsListViewController: UICollectionViewController {
 
   private func search(_ term: String) {
     viewModel.search(term)
-      .receive(on: DispatchQueue.main)
-      .sink(receiveValue: { [weak self] in self?.handleViewModelOutput($0) })
+      .handleUIChanges(on: self, with: ShowsListViewController.handleViewModelOutput)
       .store(in: &bag)
   }
 
@@ -160,11 +150,15 @@ extension UICollectionViewCell {
   class var reuseIdentifier: String { "\(Self.self)" }
 }
 
-extension ShowsListViewController: UISearchResultsUpdating {
-  func updateSearchResults(for searchController: UISearchController) {
-    _searchSubject.send(searchController.searchBar.text ?? "")
+// MARK: - UISearchBarDelegate
+
+extension ShowsListViewController: UISearchBarDelegate {
+  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    search(searchBar.text ?? "")
   }
 }
+
+// MARK: - UISearchControllerDelegate
 
 extension ShowsListViewController: UISearchControllerDelegate {
   func didDismissSearchController(_ searchController: UISearchController) {

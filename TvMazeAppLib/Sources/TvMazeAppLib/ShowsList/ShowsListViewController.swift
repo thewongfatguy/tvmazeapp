@@ -106,7 +106,7 @@ final class ShowsListViewController: UICollectionViewController {
         }
       }.store(in: &bag)
 
-    output.error.sink { dump($0) }
+    output.error.sink { _ in }
       .store(in: &bag)
 
     refresh()

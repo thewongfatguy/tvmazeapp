@@ -1,5 +1,8 @@
 import Combine
 import Foundation
+import Logging
+
+private let logger = Logger(label: "dev.grds.tvmazeapp.apiclient")
 
 public struct FetchShowsResult {
   public let page: Int
@@ -51,8 +54,31 @@ extension ApiClient {
   ) -> AnyPublisher<
     (data: Data, response: URLResponse), URLError
   > {
-    URLSession.shared
-      .dataTaskPublisher(for: route.urlRequest(withBaseURL: baseURL))
+    let request = route.urlRequest(withBaseURL: baseURL)
+    return URLSession.shared
+      .dataTaskPublisher(for: request)
+      .handleEvents(
+        receiveSubscription: { _ in
+          #if DEBUG
+            logger.info("->> \(route)")
+          #endif
+        },
+        receiveOutput: { _, response in
+          #if DEBUG
+            let httpResponse = response as! HTTPURLResponse
+            let status = httpResponse.statusCode
+
+            logger.info("<<- \(route) - status=\(status)")
+          #endif
+        },
+        receiveCompletion: { completion in
+          #if DEBUG
+            if case let .failure(error) = completion {
+              logger.info("request error: \(error)")
+            }
+          #endif
+        }
+      )
       .eraseToAnyPublisher()
   }
 }
@@ -65,7 +91,16 @@ extension Publisher where Output == (data: Data, response: URLResponse), Failure
   ) -> AnyPublisher<A, Error> {
     self
       .mapError { $0 as Error }
-      .tryMap { data, _ in try JSONDecoder().decode(A.self, from: data) }
+      .tryMap { data, _ in
+        #if DEBUG
+          do {
+            return try JSONDecoder().decode(A.self, from: data)
+          } catch {
+            logger.error("error decoding type '\(A.self)': \(error)")
+            throw error
+          }
+        #endif
+      }
       .eraseToAnyPublisher()
   }
 }

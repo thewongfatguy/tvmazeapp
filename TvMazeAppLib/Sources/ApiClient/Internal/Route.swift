@@ -7,13 +7,24 @@
 
 import Foundation
 
-internal struct Route {
+internal struct Route: CustomStringConvertible {
   let path: String
   let method: Method
   let query: [URLQueryItem]?
 
   enum Method: String {
     case get = "GET"
+  }
+
+  var description: String {
+    var output = ""
+    output += "\(method.rawValue) "
+    output += path
+    if let query = query {
+      let str = query.map { "\($0.name)=\($0.value ?? "")" }.joined(separator: "&")
+      output += "?\(str)"
+    }
+    return output
   }
 }
 

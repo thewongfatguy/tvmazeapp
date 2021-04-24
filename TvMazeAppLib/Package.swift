@@ -17,10 +17,11 @@ let package = Package(
       from: "1.8.1"),
     .package(url: "https://github.com/roberthein/TinyConstraints", from: "4.0.0"),
     .package(url: "https://github.com/onevcat/Kingfisher.git", from: "6.0.0"),
+    .package(url: "https://github.com/apple/swift-log", from: "1.4.2"),
   ],
   targets: [
     // ApiClient
-    .target(name: "ApiClient"),
+    .target(name: "ApiClient", dependencies: [.product(name: "Logging", package: "swift-log")]),
     .testTarget(
       name: "ApiClientTests",
       dependencies: ["ApiClient", "SnapshotTesting"]
@@ -45,6 +46,6 @@ let package = Package(
     ),
     .testTarget(
       name: "TvMazeAppLibTests",
-      dependencies: ["TvMazeAppLib"]),
+      dependencies: ["TvMazeAppLib", "TestSupport"]),
   ]
 )

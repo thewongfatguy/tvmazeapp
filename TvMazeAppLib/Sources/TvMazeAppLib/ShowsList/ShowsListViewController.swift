@@ -54,7 +54,7 @@ final class ShowsListViewController: UICollectionViewController {
     return cell
   }
 
-  init(viewModel: ShowListViewModel = .default) {
+  init(viewModel: ShowListViewModel = .init()) {
     self.viewModel = viewModel
     super.init(collectionViewLayout: Self.makeCollectionViewLayout())
   }
@@ -78,43 +78,38 @@ final class ShowsListViewController: UICollectionViewController {
     collectionView.refreshControl = refreshControl
     refreshControl.addTarget(self, action: #selector(refresh), for: .primaryActionTriggered)
 
-    let input = ShowListViewModel.Input(
-      refresh: refreshSubject.eraseToAnyPublisher(),
-      loadNextPage: loadNextPageSubject.eraseToAnyPublisher()
-    )
-
-    let output = viewModel.transform(input)
-
-    output.shows
-      .receive(on: DispatchQueue.main)
-      .sink(receiveValue: { [weak self] shows in
-        var snapshot = Snapshot()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(shows)
-        self?.dataSource.apply(snapshot)
-      })
-      .store(in: &bag)
-
-    output.isRefreshing
-      .delay(for: .milliseconds(500), scheduler: DispatchQueue.main)
-      .receive(on: DispatchQueue.main)
-      .sink { [weak self] isRefreshing in
-        if isRefreshing {
-          self?.refreshControl.beginRefreshing()
-        } else {
-          self?.refreshControl.endRefreshing()
-        }
-      }.store(in: &bag)
-
-    output.error.sink { _ in }
-      .store(in: &bag)
-
     refresh()
   }
 
   @objc
   private func refresh() {
-    refreshSubject.send()
+    viewModel.refresh()
+      .receive(on: DispatchQueue.main)
+      .sink(receiveValue: { [weak self] in self?.handleViewModelOutput($0) })
+      .store(in: &bag)
+  }
+
+  private func handleViewModelOutput(_ output: ShowListViewModel.Output) {
+    switch output {
+    case .showsLoaded(.success(let shows)):
+      var snapshot = Snapshot()
+      snapshot.appendSections([.main])
+      snapshot.appendItems(shows)
+      dataSource.apply(snapshot)
+
+    case .showsLoaded(.failure(let error)):
+      // TODO: handle error
+      break
+
+    case .isRefreshing(true):
+      refreshControl.beginRefreshing()
+
+    case .isRefreshing(false):
+      refreshControl.endRefreshing()
+
+    case .isLoadingNextPage(_):
+      break
+    }
   }
 }
 

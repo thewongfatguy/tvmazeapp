@@ -2,73 +2,89 @@ import Combine
 import TestSupport
 import XCTest
 
+@testable import ApiClient
 @testable import TvMazeAppLib
-
-//import ApiClient
 
 final class ShowListViewModelTests: XCTestCase {
 
-  func test_RequestError() {
+  func test_Refresh_ReturnsError() {
     Env = .failing
 
     struct _Error: Error, Equatable {}
 
     Env.apiClient.shows = { _ in Fail(error: _Error()).eraseToAnyPublisher() }
-    assertShowListViewModel(
-      commands: {
-        $0.refresh.send()
-      },
-      assertions: [
-        .isRefreshing(false),
-        .isLoadingNextPage(false),
+
+    let viewModel = ShowListViewModel.default
+
+    let events = await(viewModel.refresh())
+
+    XCTAssertEqual(
+      events,
+      [
         .isRefreshing(true),
-        .error(_Error() as NSError),
-        //                .shows([])
+        .showsLoaded(.failure(_Error() as NSError)),
+        .isRefreshing(false),
+      ]
+    )
+
+    XCTAssertEqual(viewModel.currentPage, 0)
+  }
+
+  func test_Refresh_ReturnsShowList() {
+    Env = .failing
+
+    let show = Show(
+      id: 1,
+      name: "Game of Thrones",
+      image: Show.Image(medium: URL(fileURLWithPath: ""))
+    )
+
+    Env.apiClient.shows = { _ in
+      Just(FetchShowsResult(page: 0, result: [show]))
+        .setFailureType(to: Error.self)
+        .eraseToAnyPublisher()
+    }
+
+    let viewModel = ShowListViewModel.default
+    let events = await(viewModel.refresh())
+
+    XCTAssertEqual(
+      events,
+      [
+        .isRefreshing(true),
+        .showsLoaded(.success([ShowListViewModel.Output.Show(show: show)])),
+        .isRefreshing(false),
       ]
     )
   }
 
 }
 
-private enum ShowListViewModelEvents: Equatable {
-  case shows([ShowListViewModel.Output.Show])
-  case isRefreshing(Bool)
-  case isLoadingNextPage(Bool)
-  case error(NSError)
-}
+extension XCTestCase {
 
-private struct ShowListViewModelTestsInputs {
-  let refresh = PassthroughSubject<Void, Never>()
-  let loadNextPage = PassthroughSubject<Void, Never>()
-}
+  func await<P: Publisher>(
+    _ publisher: P,
+    timeout: TimeInterval = 10,
+    file: StaticString = #file,
+    line: UInt = #line
+  ) -> [P.Output] where P.Failure == Never {
+    let expectation = self.expectation(description: "Awaiting publisher")
 
-private func assertShowListViewModel(
-  file: StaticString = #file,
-  line: UInt = #line,
-  commands: @escaping (ShowListViewModelTestsInputs) -> Void,
-  assertions: [ShowListViewModelEvents]
-) {
-  let viewModel = ShowListViewModel.default
-  let input = ShowListViewModelTestsInputs()
-  let output = viewModel.transform(
-    .init(
-      refresh: input.refresh.eraseToAnyPublisher(),
-      loadNextPage: input.loadNextPage.eraseToAnyPublisher()
-    )
-  )
+    var outputs: [P.Output] = []
 
-  let publisher = Publishers.Merge4(
-    output.shows.map(ShowListViewModelEvents.shows),
-    output.isRefreshing.map(ShowListViewModelEvents.isRefreshing),
-    output.isLoadingNextPage.map(ShowListViewModelEvents.isLoadingNextPage),
-    output.error.map { $0 as NSError }.map(ShowListViewModelEvents.error)
-  )
+    let cancellable =
+      publisher
+      .sink(
+        receiveCompletion: { _ in
+          expectation.fulfill()
+        },
+        receiveValue: { value in
+          outputs.append(value)
+        })
 
-  assertPublisherEvents(
-    file: file,
-    line: line,
-    publisher: publisher.eraseToAnyPublisher(),
-    trigger: { commands(input) },
-    assertions: assertions
-  )
+    waitForExpectations(timeout: timeout)
+    cancellable.cancel()
+
+    return outputs
+  }
 }

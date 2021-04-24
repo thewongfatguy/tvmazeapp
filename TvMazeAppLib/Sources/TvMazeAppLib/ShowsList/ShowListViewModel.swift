@@ -3,17 +3,14 @@ import Combine
 import Foundation
 import PaginationSink
 
-struct ShowListViewModel {
-  struct Input {
-    let refresh: AnyPublisher<Void, Never>
-    let loadNextPage: AnyPublisher<Void, Never>
-  }
+final class ShowListViewModel {
 
-  struct Output {
-    var shows: AnyPublisher<[Show], Never>
-    var isRefreshing: AnyPublisher<Bool, Never>
-    var isLoadingNextPage: AnyPublisher<Bool, Never>
-    var error: AnyPublisher<Error, Never>
+  private(set) var currentPage = 0
+
+  enum Output: Equatable {
+    case showsLoaded(Result<[Show], NSError>)
+    case isLoadingNextPage(Bool)
+    case isRefreshing(Bool)
 
     struct Show: Hashable {
       let name: String
@@ -21,43 +18,59 @@ struct ShowListViewModel {
     }
   }
 
-  let transform: (Input) -> Output
-}
+  func refresh() -> AnyPublisher<Output, Never> {
+    currentPage = 0
 
-extension ShowListViewModel {
-  static let `default` = ShowListViewModel { input in
+    let shows = Env.apiClient.shows(currentPage)
+      .map { shows in
+        shows.result.map(Output.Show.init)
+      }
+      .mapError { $0 as NSError }
+      .mapToResult()
+      .map(Output.showsLoaded)
 
-    let paginationSink = PaginationSink<Show, Error>.make(
-      refreshTrigger: input.refresh,
-      nextPageTrigger: input.loadNextPage,
-      valuesFromEnvelope: \FetchShowsResult.result,
-      cursorFromEnvelope: \FetchShowsResult.page,
-      requestFromCursor: { Env.apiClient.shows($0).mapToResult() }
-    )
+    return Just(.isRefreshing(true))
+      .append(shows)
+      .append(.isRefreshing(false))
+      .eraseToAnyPublisher()
+  }
 
-    return Output(
-      shows: paginationSink.values
-        .map { shows in
-          shows.map { show in Output.Show(name: show.name, posterImage: show.image.medium) }
-        }
-        .eraseToAnyPublisher(),
-      isRefreshing: paginationSink.isRefreshing,
-      isLoadingNextPage: paginationSink.isLoadingNextPage,
-      error: paginationSink.error
-    )
+  func loadNextPage() -> AnyPublisher<Output, Never> {
+    let shows = Env.apiClient.shows(currentPage + 1)
+      .handleEvents(receiveOutput: { [weak self] result in
+        // updates current page on success
+        self?.currentPage = result.page
+      })
+      .map { shows in
+        shows.result.map(Output.Show.init)
+      }
+      .mapError { $0 as NSError }
+      .mapToResult()
+      .map(Output.showsLoaded)
+
+    return Just(.isLoadingNextPage(true))
+      .append(shows)
+      .append(.isLoadingNextPage(false))
+      .eraseToAnyPublisher()
   }
 }
 
-extension Publisher where Failure: Error {
-  func forwardError<S>(to sink: S) -> AnyPublisher<Output, Never>
-  where S: Subject, S.Output == Failure, S.Failure == Never {
-    `catch` { error -> Empty<Output, Never> in
-      sink.send(error)
-      return Empty()
-    }.eraseToAnyPublisher()
+extension ShowListViewModel.Output.Show {
+  init(show: Show) {
+    self.init(name: show.name, posterImage: show.image.medium)
   }
 }
-
+//
+//extension Publisher where Failure: Error {
+//  func forwardError<S>(to sink: S) -> AnyPublisher<Output, Never>
+//  where S: Subject, S.Output == Failure, S.Failure == Never {
+//    `catch` { error -> Empty<Output, Never> in
+//      sink.send(error)
+//      return Empty()
+//    }.eraseToAnyPublisher()
+//  }
+//}
+//
 extension Publisher {
   func mapToResult() -> AnyPublisher<Result<Output, Failure>, Never> {
     map(Result.success)

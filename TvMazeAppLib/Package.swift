@@ -8,7 +8,6 @@ let package = Package(
   platforms: [.iOS(.v13)],
   products: [
     .library(name: "ApiClient", targets: ["ApiClient"]),
-    .library(name: "PaginationSink", targets: ["PaginationSink"]),
     .library(name: "TvMazeAppLib", targets: ["TvMazeAppLib"]),
   ],
   dependencies: [
@@ -24,12 +23,11 @@ let package = Package(
     .target(name: "ApiClient", dependencies: [.product(name: "Logging", package: "swift-log")]),
     .testTarget(
       name: "ApiClientTests",
-      dependencies: ["ApiClient", "SnapshotTesting"]
+      dependencies: ["ApiClient", "SnapshotTesting"],
+      exclude: [
+        "__Snapshots__"
+      ]
     ),
-
-    // PaginationSink
-    .target(name: "PaginationSink"),
-    .testTarget(name: "PaginationSinkTests", dependencies: ["PaginationSink", "TestSupport"]),
 
     // TestSupport
     .target(name: "TestSupport", dependencies: ["TvMazeAppLib", "ApiClient"]),
@@ -39,7 +37,6 @@ let package = Package(
       name: "TvMazeAppLib",
       dependencies: [
         "ApiClient",
-        "PaginationSink",
         "TinyConstraints",
         "Kingfisher",
       ]

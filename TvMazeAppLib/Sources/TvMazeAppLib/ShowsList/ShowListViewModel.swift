@@ -14,7 +14,7 @@ final class ShowListViewModel {
 
     struct Show: Hashable {
       let name: String
-      let posterImage: URL
+      let posterImage: URL?
     }
   }
 
@@ -57,7 +57,7 @@ final class ShowListViewModel {
 
 extension ShowListViewModel.Output.Show {
   init(show: Show) {
-    self.init(name: show.name, posterImage: show.image.medium)
+    self.init(name: show.name, posterImage: show.image?.medium)
   }
 }
 //

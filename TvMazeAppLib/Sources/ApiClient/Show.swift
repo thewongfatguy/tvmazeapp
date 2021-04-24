@@ -24,7 +24,7 @@ public struct Show: Decodable, Equatable {
   //  public let premiered: String
   //  public let officialSite: URL?
   //  public let schedule: Schedule
-  public let image: Image
+  public let image: Image?
 
   public struct Image: Decodable, Equatable {
     public let medium: URL

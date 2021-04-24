@@ -89,12 +89,21 @@ final class ShowsListViewController: UICollectionViewController {
       .store(in: &bag)
   }
 
+  private func loadNextPage() {
+    viewModel.loadNextPage()
+      .receive(on: DispatchQueue.main)
+      .sink(receiveValue: { [weak self] in self?.handleViewModelOutput($0) })
+      .store(in: &bag)
+  }
+
   private func handleViewModelOutput(_ output: ShowListViewModel.Output) {
     switch output {
     case .showsLoaded(.success(let shows)):
-      var snapshot = Snapshot()
-      snapshot.appendSections([.main])
-      snapshot.appendItems(shows)
+      var snapshot = dataSource.snapshot()
+      if snapshot.indexOfSection(.main) == nil {
+        snapshot.appendSections([.main])
+      }
+      snapshot.appendItems(shows, toSection: .main)
       dataSource.apply(snapshot)
 
     case .showsLoaded(.failure(let error)):
@@ -109,6 +118,16 @@ final class ShowsListViewController: UICollectionViewController {
 
     case .isLoadingNextPage(_):
       break
+    }
+  }
+
+  override func collectionView(
+    _ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell,
+    forItemAt indexPath: IndexPath
+  ) {
+    let numberOfItems = collectionView.numberOfItems(inSection: 0)
+    if indexPath.item == numberOfItems - 1 {
+      loadNextPage()
     }
   }
 }

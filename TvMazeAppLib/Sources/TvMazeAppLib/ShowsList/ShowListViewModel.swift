@@ -6,9 +6,10 @@ import PaginationSink
 final class ShowListViewModel {
 
   private(set) var currentPage = 0
+  private(set) var isInSearchMode = false
 
   enum Output: Equatable {
-    case showsLoaded(Result<[Show], NSError>)
+    case showsLoaded(Result<[Show], NSError>, source: LoadSource)
     case isLoadingNextPage(Bool)
     case isRefreshing(Bool)
 
@@ -16,10 +17,15 @@ final class ShowListViewModel {
       let name: String
       let posterImage: URL?
     }
+
+    enum LoadSource: Equatable {
+      case refresh, loadNextPage, search
+    }
   }
 
   func refresh() -> AnyPublisher<Output, Never> {
     currentPage = 0
+    isInSearchMode = false
 
     let shows = Env.apiClient.shows(currentPage)
       .map { shows in
@@ -27,7 +33,7 @@ final class ShowListViewModel {
       }
       .mapError { $0 as NSError }
       .mapToResult()
-      .map(Output.showsLoaded)
+      .map { Output.showsLoaded($0, source: .refresh) }
 
     return Just(.isRefreshing(true))
       .append(shows)
@@ -36,6 +42,13 @@ final class ShowListViewModel {
   }
 
   func loadNextPage() -> AnyPublisher<Output, Never> {
+    // Loading next page is not supported when searching
+    // as the search endpoint already returns all results in
+    // a single fetch.
+    guard !isInSearchMode else {
+      return Empty().eraseToAnyPublisher()
+    }
+
     let shows = Env.apiClient.shows(currentPage + 1)
       .handleEvents(receiveOutput: { [weak self] result in
         // updates current page on success
@@ -46,12 +59,30 @@ final class ShowListViewModel {
       }
       .mapError { $0 as NSError }
       .mapToResult()
-      .map(Output.showsLoaded)
+      .map { Output.showsLoaded($0, source: .loadNextPage) }
 
     return Just(.isLoadingNextPage(true))
       .append(shows)
       .append(.isLoadingNextPage(false))
       .eraseToAnyPublisher()
+  }
+
+  func search(_ term: String) -> AnyPublisher<Output, Never> {
+    guard term.isEmpty == false else {
+      return Empty().eraseToAnyPublisher()
+    }
+
+    isInSearchMode = true
+
+    let shows = Env.apiClient.searchShows(term)
+      .map { shows in
+        shows.map { Output.Show(show: $0.show) }
+      }
+      .mapError { $0 as NSError }
+      .mapToResult()
+      .map { Output.showsLoaded($0, source: .search) }
+
+    return shows.eraseToAnyPublisher()
   }
 }
 

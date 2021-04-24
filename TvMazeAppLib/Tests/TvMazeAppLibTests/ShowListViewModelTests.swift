@@ -14,7 +14,7 @@ final class ShowListViewModelTests: XCTestCase {
 
     Env.apiClient.shows = { _ in Fail(error: _Error()).eraseToAnyPublisher() }
 
-    let viewModel = ShowListViewModel.default
+    let viewModel = ShowListViewModel()
 
     let events = await(viewModel.refresh())
 
@@ -22,7 +22,7 @@ final class ShowListViewModelTests: XCTestCase {
       events,
       [
         .isRefreshing(true),
-        .showsLoaded(.failure(_Error() as NSError)),
+        .showsLoaded(.failure(_Error() as NSError), source: .refresh),
         .isRefreshing(false),
       ]
     )
@@ -45,14 +45,14 @@ final class ShowListViewModelTests: XCTestCase {
         .eraseToAnyPublisher()
     }
 
-    let viewModel = ShowListViewModel.default
+    let viewModel = ShowListViewModel()
     let events = await(viewModel.refresh())
 
     XCTAssertEqual(
       events,
       [
         .isRefreshing(true),
-        .showsLoaded(.success([ShowListViewModel.Output.Show(show: show)])),
+        .showsLoaded(.success([ShowListViewModel.Output.Show(show: show)]), source: .refresh),
         .isRefreshing(false),
       ]
     )

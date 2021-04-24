@@ -16,6 +16,12 @@ final class ShowsListViewController: UICollectionViewController {
   private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, ShowListViewModel.Output.Show>
 
   private let refreshControl = UIRefreshControl()
+  private lazy var searchController = with(UISearchController(searchResultsController: nil)) {
+    $0.searchBar.autocapitalizationType = .none
+    $0.searchResultsUpdater = self
+    $0.delegate = self
+    $0.obscuresBackgroundDuringPresentation = false
+  }
 
   static func makeCollectionViewLayout() -> UICollectionViewLayout {
     let itemSize = NSCollectionLayoutSize(
@@ -57,6 +63,8 @@ final class ShowsListViewController: UICollectionViewController {
   init(viewModel: ShowListViewModel = .init()) {
     self.viewModel = viewModel
     super.init(collectionViewLayout: Self.makeCollectionViewLayout())
+
+    definesPresentationContext = true
   }
 
   @available(*, unavailable)
@@ -64,8 +72,7 @@ final class ShowsListViewController: UICollectionViewController {
     fatalError("init(coder:) has not been implemented")
   }
 
-  private let refreshSubject = PassthroughSubject<Void, Never>()
-  private let loadNextPageSubject = PassthroughSubject<Void, Never>()
+  private let _searchSubject = PassthroughSubject<String, Never>()
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -77,6 +84,14 @@ final class ShowsListViewController: UICollectionViewController {
       ShowItemCell.self, forCellWithReuseIdentifier: ShowItemCell.reuseIdentifier)
     collectionView.refreshControl = refreshControl
     refreshControl.addTarget(self, action: #selector(refresh), for: .primaryActionTriggered)
+    navigationItem.searchController = searchController
+
+    _searchSubject
+      .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+      .removeDuplicates()
+      .flatMap { term in self.viewModel.search(term) }
+      .handleUIChanges(on: self, with: ShowsListViewController.handleViewModelOutput)
+      .store(in: &bag)
 
     refresh()
   }
@@ -84,13 +99,18 @@ final class ShowsListViewController: UICollectionViewController {
   @objc
   private func refresh() {
     viewModel.refresh()
-      .receive(on: DispatchQueue.main)
-      .sink(receiveValue: { [weak self] in self?.handleViewModelOutput($0) })
+      .handleUIChanges(on: self, with: ShowsListViewController.handleViewModelOutput)
       .store(in: &bag)
   }
 
   private func loadNextPage() {
     viewModel.loadNextPage()
+      .handleUIChanges(on: self, with: ShowsListViewController.handleViewModelOutput)
+      .store(in: &bag)
+  }
+
+  private func search(_ term: String) {
+    viewModel.search(term)
       .receive(on: DispatchQueue.main)
       .sink(receiveValue: { [weak self] in self?.handleViewModelOutput($0) })
       .store(in: &bag)
@@ -98,15 +118,19 @@ final class ShowsListViewController: UICollectionViewController {
 
   private func handleViewModelOutput(_ output: ShowListViewModel.Output) {
     switch output {
-    case .showsLoaded(.success(let shows)):
+    case let .showsLoaded(.success(shows), .refresh),
+      let .showsLoaded(.success(shows), .search):
+      var snapshot = Snapshot()
+      snapshot.appendSections([.main])
+      snapshot.appendItems(shows)
+      dataSource.apply(snapshot)
+
+    case let .showsLoaded(.success(shows), .loadNextPage):
       var snapshot = dataSource.snapshot()
-      if snapshot.indexOfSection(.main) == nil {
-        snapshot.appendSections([.main])
-      }
       snapshot.appendItems(shows, toSection: .main)
       dataSource.apply(snapshot)
 
-    case .showsLoaded(.failure(let error)):
+    case .showsLoaded(.failure(let error), _):
       // TODO: handle error
       break
 
@@ -134,4 +158,33 @@ final class ShowsListViewController: UICollectionViewController {
 
 extension UICollectionViewCell {
   class var reuseIdentifier: String { "\(Self.self)" }
+}
+
+extension ShowsListViewController: UISearchResultsUpdating {
+  func updateSearchResults(for searchController: UISearchController) {
+    _searchSubject.send(searchController.searchBar.text ?? "")
+  }
+}
+
+extension ShowsListViewController: UISearchControllerDelegate {
+  func didDismissSearchController(_ searchController: UISearchController) {
+    refresh()
+  }
+}
+
+extension Publisher where Failure == Never {
+
+  func handleUIChanges<O: AnyObject>(on object: O, with handler: @escaping (O) -> (Output) -> Void)
+    -> Cancellable
+  {
+    receive(on: DispatchQueue.main)
+      .sink { [weak object] output in
+        guard let object = object else {
+          return
+        }
+
+        let apply = handler(object)
+        apply(output)
+      }
+  }
 }

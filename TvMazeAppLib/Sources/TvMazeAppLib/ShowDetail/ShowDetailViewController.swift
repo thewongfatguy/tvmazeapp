@@ -299,7 +299,12 @@ private final class ScheduleView: BaseView {
 
 private final class SummaryView: BaseView {
 
-  private lazy var label = with(UILabel()) {
+  private let titleLabel = with(UILabel()) {
+    $0.text = "Summary"
+    $0.font = .preferredFont(forTextStyle: .headline)
+  }
+
+  private lazy var summaryLabel = with(UILabel()) {
     $0.numberOfLines = 0
     $0.attributedText = summary.htmlAttributedString()
   }
@@ -312,10 +317,14 @@ private final class SummaryView: BaseView {
   }
 
   override func setupViewHierarchy() {
-    addSubview(label)
+    addSubview(titleLabel)
+    addSubview(summaryLabel)
   }
 
   override func setupConstraints() {
-    label.edgesToSuperview(insets: .uniform(20))
+    titleLabel.edgesToSuperview(excluding: .bottom, insets: .uniform(20))
+    summaryLabel.edgesToSuperview(excluding: .top, insets: .uniform(20))
+
+    titleLabel.bottomToTop(of: summaryLabel, offset: -8)
   }
 }

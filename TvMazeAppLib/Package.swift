@@ -20,7 +20,8 @@ let package = Package(
   ],
   targets: [
     // ApiClient
-    .target(name: "ApiClient", dependencies: [.product(name: "Logging", package: "swift-log")]),
+    .target(
+      name: "ApiClient", dependencies: [.product(name: "Logging", package: "swift-log"), "Models"]),
     .testTarget(
       name: "ApiClientTests",
       dependencies: ["ApiClient", "SnapshotTesting"],
@@ -28,6 +29,9 @@ let package = Package(
         "__Snapshots__"
       ]
     ),
+
+    // Models
+    .target(name: "Models"),
 
     // TestSupport
     .target(name: "TestSupport", dependencies: ["TvMazeAppLib", "ApiClient"]),

@@ -7,6 +7,7 @@
 
 import ApiClient
 import Foundation
+import Models
 
 final class ShowDetailViewModel {
 

@@ -3,6 +3,7 @@ import TestSupport
 import XCTest
 
 @testable import ApiClient
+@testable import Models
 @testable import TvMazeAppLib
 
 final class ShowListViewModelTests: XCTestCase {
@@ -49,7 +50,8 @@ final class ShowListViewModelTests: XCTestCase {
       events,
       [
         .isRefreshing(true),
-        .showsLoaded(.success([ShowListViewModel.Output.Show(show: show)]), source: .refresh),
+        .showsLoaded(
+          .success([ShowListViewModel.Output.ShowDisplay(show: show)]), source: .refresh),
         .isRefreshing(false),
       ]
     )
@@ -69,7 +71,8 @@ final class ShowListViewModelTests: XCTestCase {
       events,
       [
         .isLoadingNextPage(true),
-        .showsLoaded(.success([ShowListViewModel.Output.Show(show: show)]), source: .loadNextPage),
+        .showsLoaded(
+          .success([ShowListViewModel.Output.ShowDisplay(show: show)]), source: .loadNextPage),
         .isLoadingNextPage(false),
       ]
     )
@@ -149,12 +152,19 @@ final class ShowListViewModelTests: XCTestCase {
 extension Show {
   static func stub(
     id: Int = 1, name: String = "Game of Thrones",
-    image: Show.Image = Show.Image(medium: URL(fileURLWithPath: ""))
+    genres: [String]? = ["Drama"],
+    schedule: Schedule? = .init(time: "22:00", days: ["Sunday"]),
+    image: Show.Image = Show.Image(
+      medium: URL(fileURLWithPath: ""), original: URL(fileURLWithPath: "")),
+    summary: String? = "This is a summary"
   ) -> Show {
     Show(
       id: id,
       name: name,
-      image: image
+      genres: genres,
+      schedule: schedule,
+      image: image,
+      summary: summary
     )
   }
 }

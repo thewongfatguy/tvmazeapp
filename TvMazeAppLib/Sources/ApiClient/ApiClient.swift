@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import Logging
+import Models
 
 private let logger = Logger(label: "dev.grds.tvmazeapp.apiclient")
 

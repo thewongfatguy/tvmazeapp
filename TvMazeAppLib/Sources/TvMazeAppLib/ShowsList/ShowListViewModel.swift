@@ -1,6 +1,7 @@
 import ApiClient
 import Combine
 import Foundation
+import Models
 
 final class ShowListViewModel {
 

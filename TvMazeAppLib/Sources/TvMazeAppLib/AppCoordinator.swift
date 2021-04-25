@@ -1,3 +1,4 @@
+import Models
 import UIKit
 
 public final class AppCoordinator {
@@ -11,7 +12,19 @@ public final class AppCoordinator {
 
   public func start() {
     window.rootViewController = rootNavigationController
-    rootNavigationController.setViewControllers([ShowsListViewController()], animated: false)
+
+    let showsListViewController = ShowsListViewController()
+
+    showsListViewController.didSelectShow = { [weak self] show in
+      self?.navigateToShowDetail(show)
+    }
+
+    rootNavigationController.setViewControllers([showsListViewController], animated: false)
     window.makeKeyAndVisible()
+  }
+
+  private func navigateToShowDetail(_ show: Show) {
+    rootNavigationController.pushViewController(
+      ShowDetailViewController(viewModel: ShowDetailViewModel(show: show)), animated: true)
   }
 }

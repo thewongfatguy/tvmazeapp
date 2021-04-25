@@ -1,5 +1,6 @@
 import ApiClient
 import Combine
+import Models
 import UIKit
 
 final class ShowsListViewController: UICollectionViewController {
@@ -122,7 +123,7 @@ final class ShowsListViewController: UICollectionViewController {
       snapshot.appendItems(shows, toSection: .main)
       dataSource.apply(snapshot)
 
-    case .showsLoaded(.failure(let error), _):
+    case .showsLoaded(.failure(_), _):
       // TODO: handle error
       break
 
@@ -154,9 +155,10 @@ final class ShowsListViewController: UICollectionViewController {
       return
     }
 
-    navigationController?.pushViewController(
-      ShowDetailViewController(viewModel: ShowDetailViewModel(show: show.show)), animated: true)
+    didSelectShow(show.show)
   }
+
+  var didSelectShow: ((Show) -> Void)!
 }
 
 extension UICollectionViewCell {

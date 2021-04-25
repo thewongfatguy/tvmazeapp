@@ -62,4 +62,12 @@ extension Route {
       ]
     )
   }
+
+  static func showsEpisodes(_ showId: Int) -> Route {
+    Route(
+      path: "/shows/\(showId)/episodes",
+      method: .get,
+      query: nil
+    )
+  }
 }

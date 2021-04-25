@@ -25,4 +25,10 @@ final class RouteTest: XCTestCase {
     let request = route.urlRequest(withBaseURL: baseURL)
     assertSnapshot(matching: request, as: .raw)
   }
+
+  func test_Build_ShowsEpisodesRoute() {
+    let route = Route.showsEpisodes(1)
+    let request = route.urlRequest(withBaseURL: baseURL)
+    assertSnapshot(matching: request, as: .raw)
+  }
 }

@@ -84,14 +84,12 @@ extension Publisher where Output == (data: Data, response: URLResponse), Failure
     self
       .mapError { $0 as Error }
       .tryMap { data, _ in
-        #if DEBUG
-          do {
-            return try JSONDecoder().decode(A.self, from: data)
-          } catch {
-            logger.error("error decoding type '\(A.self)': \(error)")
-            throw error
-          }
-        #endif
+        do {
+          return try JSONDecoder().decode(A.self, from: data)
+        } catch {
+          logger.error("error decoding type '\(A.self)': \(error)")
+          throw error
+        }
       }
       .eraseToAnyPublisher()
   }

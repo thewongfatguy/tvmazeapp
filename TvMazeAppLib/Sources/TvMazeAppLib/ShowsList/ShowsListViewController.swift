@@ -144,6 +144,16 @@ final class ShowsListViewController: UICollectionViewController {
       loadNextPage()
     }
   }
+
+  override func collectionView(
+    _ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath
+  ) {
+    //        guard let show = dataSource.itemIdentifier(for: indexPath) else {
+    //
+    //        }
+
+    navigationController?.pushViewController(ShowDetailViewController(), animated: true)
+  }
 }
 
 extension UICollectionViewCell {

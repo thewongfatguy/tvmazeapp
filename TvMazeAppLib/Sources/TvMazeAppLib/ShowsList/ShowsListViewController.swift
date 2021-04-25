@@ -63,7 +63,7 @@ final class ShowsListViewController: UICollectionViewController {
     return cell
   }
 
-  init(viewModel: ShowListViewModel = .init()) {
+  init(viewModel: ShowListViewModel = .default) {
     self.viewModel = viewModel
     super.init(collectionViewLayout: Self.makeCollectionViewLayout())
 

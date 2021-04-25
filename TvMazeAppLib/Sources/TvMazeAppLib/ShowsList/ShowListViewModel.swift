@@ -3,10 +3,10 @@ import Combine
 import Foundation
 import Models
 
-final class ShowListViewModel {
-
-  private(set) var currentPage = 0
-  private(set) var isInSearchMode = false
+struct ShowListViewModel {
+  var refresh: () -> AnyPublisher<Output, Never>
+  var loadNextPage: () -> AnyPublisher<Output, Never>
+  var search: (_ term: String) -> AnyPublisher<Output, Never>
 
   enum Output: Equatable {
     case showsLoaded(Result<[ShowDisplay], NSError>, source: LoadSource)
@@ -14,27 +14,31 @@ final class ShowListViewModel {
     case isRefreshing(Bool)
 
     struct ShowDisplay: Hashable {
-      static func == (
-        lhs: ShowListViewModel.Output.ShowDisplay, rhs: ShowListViewModel.Output.ShowDisplay
-      ) -> Bool {
-        lhs.name == rhs.name && lhs.posterImage == rhs.posterImage
-      }
-
       let show: Show
 
       var name: String { show.name }
       var posterImage: URL? { show.image?.medium }
-
-      func hash(into hasher: inout Hasher) {
-        name.hash(into: &hasher)
-        posterImage?.hash(into: &hasher)
-      }
     }
 
     enum LoadSource: Equatable {
       case refresh, loadNextPage, search
     }
   }
+}
+
+extension ShowListViewModel {
+  static var `default`: ShowListViewModel {
+    let vm = _ShowListViewModel()
+    return ShowListViewModel(refresh: vm.refresh, loadNextPage: vm.loadNextPage, search: vm.search)
+  }
+}
+
+private final class _ShowListViewModel {
+
+  typealias Output = ShowListViewModel.Output
+
+  var currentPage = 0
+  var isInSearchMode = false
 
   func refresh() -> AnyPublisher<Output, Never> {
     currentPage = 0

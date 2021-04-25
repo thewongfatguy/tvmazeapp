@@ -11,9 +11,11 @@ final class ShowsListViewController: UICollectionViewController {
   }
 
   private typealias DataSource = UICollectionViewDiffableDataSource<
-    Section, ShowListViewModel.Output.Show
+    Section, ShowListViewModel.Output.ShowDisplay
   >
-  private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, ShowListViewModel.Output.Show>
+  private typealias Snapshot = NSDiffableDataSourceSnapshot<
+    Section, ShowListViewModel.Output.ShowDisplay
+  >
 
   private let refreshControl = UIRefreshControl()
   private lazy var searchController = with(UISearchController(searchResultsController: nil)) {
@@ -148,11 +150,12 @@ final class ShowsListViewController: UICollectionViewController {
   override func collectionView(
     _ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath
   ) {
-    //        guard let show = dataSource.itemIdentifier(for: indexPath) else {
-    //
-    //        }
+    guard let show = dataSource.itemIdentifier(for: indexPath) else {
+      return
+    }
 
-    navigationController?.pushViewController(ShowDetailViewController(), animated: true)
+    navigationController?.pushViewController(
+      ShowDetailViewController(viewModel: ShowDetailViewModel(show: show.show)), animated: true)
   }
 }
 

@@ -1,7 +1,6 @@
 import ApiClient
 import Combine
 import Foundation
-import PaginationSink
 
 final class ShowListViewModel {
 
@@ -9,13 +8,26 @@ final class ShowListViewModel {
   private(set) var isInSearchMode = false
 
   enum Output: Equatable {
-    case showsLoaded(Result<[Show], NSError>, source: LoadSource)
+    case showsLoaded(Result<[ShowDisplay], NSError>, source: LoadSource)
     case isLoadingNextPage(Bool)
     case isRefreshing(Bool)
 
-    struct Show: Hashable {
-      let name: String
-      let posterImage: URL?
+    struct ShowDisplay: Hashable {
+      static func == (
+        lhs: ShowListViewModel.Output.ShowDisplay, rhs: ShowListViewModel.Output.ShowDisplay
+      ) -> Bool {
+        lhs.name == rhs.name && lhs.posterImage == rhs.posterImage
+      }
+
+      let show: Show
+
+      var name: String { show.name }
+      var posterImage: URL? { show.image?.medium }
+
+      func hash(into hasher: inout Hasher) {
+        name.hash(into: &hasher)
+        posterImage?.hash(into: &hasher)
+      }
     }
 
     enum LoadSource: Equatable {
@@ -29,7 +41,7 @@ final class ShowListViewModel {
 
     let shows = Env.apiClient.shows(currentPage)
       .map { shows in
-        shows.result.map(Output.Show.init)
+        shows.result.map(Output.ShowDisplay.init)
       }
       .mapError { $0 as NSError }
       .mapToResult()
@@ -55,7 +67,7 @@ final class ShowListViewModel {
         self?.currentPage = result.page
       })
       .map { shows in
-        shows.result.map(Output.Show.init)
+        shows.result.map(Output.ShowDisplay.init)
       }
       .mapError { $0 as NSError }
       .mapToResult()
@@ -76,7 +88,7 @@ final class ShowListViewModel {
 
     let shows = Env.apiClient.searchShows(term)
       .map { shows in
-        shows.map { Output.Show(show: $0.show) }
+        shows.map { Output.ShowDisplay(show: $0.show) }
       }
       .mapError { $0 as NSError }
       .mapToResult()
@@ -86,11 +98,6 @@ final class ShowListViewModel {
   }
 }
 
-extension ShowListViewModel.Output.Show {
-  init(show: Show) {
-    self.init(name: show.name, posterImage: show.image?.medium)
-  }
-}
 //
 //extension Publisher where Failure: Error {
 //  func forwardError<S>(to sink: S) -> AnyPublisher<Output, Never>

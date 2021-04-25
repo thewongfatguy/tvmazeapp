@@ -47,7 +47,7 @@ final class ShowItemCell: UICollectionViewCell {
     nameLabel.text = nil
   }
 
-  func bind(to viewModel: ShowListViewModel.Output.Show) {
+  func bind(to viewModel: ShowListViewModel.Output.ShowDisplay) {
     posterImageView.kf.setImage(with: viewModel.posterImage)
     nameLabel.text = viewModel.name
   }

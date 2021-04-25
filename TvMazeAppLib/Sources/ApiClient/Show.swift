@@ -34,6 +34,6 @@ public struct Show: Decodable {
 }
 
 public struct Schedule: Decodable {
-  public let time: String?
-  public let days: [String]?
+  public let time: String
+  public let days: [String]
 }

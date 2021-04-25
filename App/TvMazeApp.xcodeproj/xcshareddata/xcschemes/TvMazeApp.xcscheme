@@ -42,19 +42,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "TvMazeApiClientTests"
-               BuildableName = "TvMazeApiClientTests"
-               BlueprintName = "TvMazeApiClientTests"
-               ReferencedContainer = "container:../TvMazeAppLib">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PaginationSinkTests"
-               BuildableName = "PaginationSinkTests"
-               BlueprintName = "PaginationSinkTests"
+               BlueprintIdentifier = "ApiClientTests"
+               BuildableName = "ApiClientTests"
+               BlueprintName = "ApiClientTests"
                ReferencedContainer = "container:../TvMazeAppLib">
             </BuildableReference>
          </TestableReference>

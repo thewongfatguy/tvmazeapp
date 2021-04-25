@@ -13,6 +13,8 @@ public struct FetchShowsResult {
 public struct ApiClient {
   public var shows: (Int) -> AnyPublisher<FetchShowsResult, Error>
   public var searchShows: (String) -> AnyPublisher<[ShowSearch], Error>
+
+  public var fetchEpisodes: (Int) -> AnyPublisher<[Episode], Error>
 }
 
 extension ApiClient {
@@ -33,6 +35,13 @@ extension ApiClient {
         ApiClient.apiRequest(
           baseURL: baseURL,
           route: .searchShows(term)
+        )
+        .apiDecoded()
+      },
+      fetchEpisodes: { showId in
+        ApiClient.apiRequest(
+          baseURL: baseURL,
+          route: .showsEpisodes(showId)
         )
         .apiDecoded()
       }

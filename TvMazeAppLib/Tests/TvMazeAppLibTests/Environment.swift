@@ -32,6 +32,10 @@ extension ApiClient {
       searchShows: {
         XCTFail("\(Self.self).searchShows(\($0)) is not implemented.")
         return Empty().eraseToAnyPublisher()
+      },
+      fetchEpisodes: {
+        XCTFail("\(Self.self).fetchEpisodes(\($0)) is not implemented.")
+        return Empty().eraseToAnyPublisher()
       }
     )
   }

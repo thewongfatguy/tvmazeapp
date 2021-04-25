@@ -12,7 +12,7 @@ public struct ShowSearch: Decodable {
   public let show: Show
 }
 
-public struct Show: Decodable {
+public struct Show: Decodable, Hashable {
   public let id: Int
   //  public let url: URL
   public let name: String
@@ -26,14 +26,14 @@ public struct Show: Decodable {
   public let schedule: Schedule?
   public let image: Image?
   public let summary: String?
-
-  public struct Image: Decodable {
-    public let medium: URL?
-    public let original: URL?
-  }
 }
 
-public struct Schedule: Decodable {
+public struct Image: Decodable, Hashable {
+  public let medium: URL?
+  public let original: URL?
+}
+
+public struct Schedule: Decodable, Hashable {
   public let time: String
   public let days: [String]
 }

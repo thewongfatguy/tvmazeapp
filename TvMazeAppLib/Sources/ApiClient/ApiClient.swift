@@ -14,7 +14,7 @@ public struct ApiClient {
   public var shows: (Int) -> AnyPublisher<FetchShowsResult, Error>
   public var searchShows: (String) -> AnyPublisher<[ShowSearch], Error>
 
-  public var fetchEpisodes: (Int) -> AnyPublisher<[Episode], Error>
+  public var fetchEpisodes: (Id<Show>) -> AnyPublisher<[Episode], Error>
 }
 
 extension ApiClient {

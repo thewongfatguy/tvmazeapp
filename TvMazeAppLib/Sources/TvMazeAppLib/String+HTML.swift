@@ -39,4 +39,13 @@ extension String {
 
     return attributedString
   }
+
+  func removingHTMLTags() -> String {
+    guard let regex = try? NSRegularExpression(pattern: "<.*?>", options: .caseInsensitive) else {
+      return self
+    }
+
+    return regex.stringByReplacingMatches(
+      in: self, options: [], range: NSRange(startIndex..<endIndex, in: self), withTemplate: "")
+  }
 }

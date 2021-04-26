@@ -14,6 +14,7 @@ let package = Package(
     .package(
       name: "SnapshotTesting", url: "https://github.com/pointfreeco/swift-snapshot-testing.git",
       from: "1.8.1"),
+    .package(name: "Tagged", url: "https://github.com/pointfreeco/swift-tagged", from: "0.5.0"),
     .package(url: "https://github.com/roberthein/TinyConstraints", from: "4.0.0"),
     .package(url: "https://github.com/onevcat/Kingfisher.git", from: "6.0.0"),
     .package(url: "https://github.com/apple/swift-log", from: "1.4.2"),
@@ -31,7 +32,7 @@ let package = Package(
     ),
 
     // Models
-    .target(name: "Models"),
+    .target(name: "Models", dependencies: ["Tagged"]),
 
     // TestSupport
     .target(name: "TestSupport", dependencies: ["TvMazeAppLib", "ApiClient"]),

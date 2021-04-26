@@ -58,8 +58,8 @@ final class ShowsListViewController: UICollectionViewController {
     collectionView, indexPath, show -> UICollectionViewCell? in
     let cell =
       collectionView.dequeueReusableCell(
-        withReuseIdentifier: ShowItemCell.reuseIdentifier, for: indexPath) as! ShowItemCell
-    cell.bind(to: show)
+        withReuseIdentifier: ShowItemCell.reuseIdentifier, for: indexPath) as? ShowItemCell
+    cell?.bind(to: show)
     return cell
   }
 
@@ -184,7 +184,7 @@ extension ShowsListViewController: UISearchControllerDelegate {
 extension Publisher where Failure == Never {
 
   func handleUIChanges<O: AnyObject>(on object: O, with handler: @escaping (O) -> (Output) -> Void)
-    -> Cancellable
+    -> AnyCancellable
   {
     receive(on: DispatchQueue.main)
       .sink { [weak object] output in

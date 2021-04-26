@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Models
 
 internal struct Route: CustomStringConvertible {
   let path: String
@@ -63,9 +64,9 @@ extension Route {
     )
   }
 
-  static func showsEpisodes(_ showId: Int) -> Route {
+  static func showsEpisodes(_ showId: Id<Show>) -> Route {
     Route(
-      path: "/shows/\(showId)/episodes",
+      path: "/shows/\(showId.rawValue)/episodes",
       method: .get,
       query: nil
     )

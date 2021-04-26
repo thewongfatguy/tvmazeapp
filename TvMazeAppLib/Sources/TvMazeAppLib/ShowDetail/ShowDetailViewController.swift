@@ -5,8 +5,10 @@ final class ShowDetailViewController: UIViewController {
   private let viewModel: ShowDetailViewModel
 
   private lazy var rootView = ShowDetailView(
-    showAllEpisodesAction: { [weak self] in self?.showAllEpisodes() }
+    showAllEpisodesAction: { [weak self] in self?.didTapShowAllEpisodes() }
   )
+
+  var didTapShowAllEpisodes: (() -> Void)!
 
   init(viewModel: ShowDetailViewModel) {
     self.viewModel = viewModel
@@ -28,9 +30,5 @@ final class ShowDetailViewController: UIViewController {
 
   override func loadView() {
     view = rootView
-  }
-
-  private func showAllEpisodes() {
-    navigationController?.pushViewController(UIViewController(), animated: true)
   }
 }

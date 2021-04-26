@@ -24,7 +24,17 @@ public final class AppCoordinator {
   }
 
   private func navigateToShowDetail(_ show: Show) {
+    let controller = ShowDetailViewController(viewModel: ShowDetailViewModel(show: show))
+    controller.didTapShowAllEpisodes = { [weak self] in
+      self?.navigateToEpisodesList(show.id)
+    }
+
     rootNavigationController.pushViewController(
-      ShowDetailViewController(viewModel: ShowDetailViewModel(show: show)), animated: true)
+      controller, animated: true)
+  }
+
+  private func navigateToEpisodesList(_ showId: Id<Show>) {
+    rootNavigationController.pushViewController(
+      EpisodesListViewController(viewModel: .default(forShowId: showId)), animated: true)
   }
 }

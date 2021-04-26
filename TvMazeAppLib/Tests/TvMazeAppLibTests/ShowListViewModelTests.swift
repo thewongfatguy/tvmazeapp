@@ -163,7 +163,7 @@ extension Show {
     summary: String? = "This is a summary"
   ) -> Show {
     Show(
-      id: id,
+      id: Id(rawValue: id),
       name: name,
       genres: genres,
       schedule: schedule,

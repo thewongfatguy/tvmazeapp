@@ -5,7 +5,7 @@
 //  Created by Guilherme Souza on 23/04/21.
 //
 
-import TvMazeAppLib
+import AppFeature
 import UIKit
 
 @main

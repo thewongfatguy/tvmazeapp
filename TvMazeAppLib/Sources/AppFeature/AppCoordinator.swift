@@ -1,3 +1,4 @@
+import EpisodesFeature
 import Models
 import ShowFeature
 import UIKit
@@ -27,7 +28,11 @@ public final class AppCoordinator {
   }
 
   private func navigateToEpisodesList(_ showId: Id<Show>) {
-    rootNavigationController.pushViewController(
-      EpisodesListViewController(viewModel: .default(forShowId: showId)), animated: true)
+    let episodesCoordinator = EpisodesCoordinator()
+    coordinators[episodesCoordinator.id] = episodesCoordinator
+    episodesCoordinator.start(in: rootNavigationController, forShowId: showId) {
+      [weak self, id = episodesCoordinator.id] in
+      self?.coordinators[id] = nil
+    }
   }
 }

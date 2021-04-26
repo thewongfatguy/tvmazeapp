@@ -3,6 +3,8 @@ import UIKit
 
 final class EpisodesListViewController: UIViewController {
 
+  public var didFinish: (() -> Void)?
+
   private let viewModel: EpisodesListViewModel
   private var cancellable: AnyCancellable?
 
@@ -29,5 +31,13 @@ final class EpisodesListViewController: UIViewController {
 
     cancellable = viewModel.fetchEpisodes()
       .handleUIChanges(on: rootView, with: EpisodesListView.handleViewModelOutputs)
+  }
+
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    if isBeingDismissed || isMovingFromParent {
+      didFinish?()
+      didFinish = nil
+    }
   }
 }

@@ -1,5 +1,6 @@
 import Helpers
 import Kingfisher
+import TinyConstraints
 import UIKit
 
 final class EpisodeCell: UITableViewCell {

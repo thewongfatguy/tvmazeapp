@@ -1,19 +1,19 @@
 import UIKit
 
-protocol Stackable {
+public protocol Stackable {
   var rootView: UIView { get }
 }
 
 extension UIView: Stackable {
-  var rootView: UIView { self }
+  public var rootView: UIView { self }
 }
 
-final class Stack: Stackable {
-  var rootView: UIView { stackView }
+public final class Stack: Stackable {
+  public var rootView: UIView { stackView }
 
   private let stackView = UIStackView()
 
-  init(
+  public init(
     axis: NSLayoutConstraint.Axis,
     spacing: CGFloat,
     alignment: UIStackView.Alignment,
@@ -27,7 +27,7 @@ final class Stack: Stackable {
     }
   }
 
-  convenience init(
+  convenience public init(
     axis: NSLayoutConstraint.Axis,
     spacing: CGFloat,
     alignment: UIStackView.Alignment,
@@ -36,7 +36,7 @@ final class Stack: Stackable {
     self.init(axis: axis, spacing: spacing, alignment: alignment, views)
   }
 
-  static func horizontal(
+  public static func horizontal(
     alignment: UIStackView.Alignment = .fill,
     spacing: CGFloat = 8,
     _ views: [Stackable]
@@ -44,7 +44,7 @@ final class Stack: Stackable {
     Stack(axis: .horizontal, spacing: spacing, alignment: alignment, views)
   }
 
-  static func vertical(
+  public static func vertical(
     alignment: UIStackView.Alignment = .fill,
     spacing: CGFloat = 8,
     _ views: [Stackable]
@@ -52,7 +52,7 @@ final class Stack: Stackable {
     Stack(axis: .vertical, spacing: spacing, alignment: alignment, views)
   }
 
-  static func horizontal(
+  public static func horizontal(
     alignment: UIStackView.Alignment = .fill,
     spacing: CGFloat = 8,
     _ views: Stackable...
@@ -60,7 +60,7 @@ final class Stack: Stackable {
     horizontal(alignment: alignment, spacing: spacing, views)
   }
 
-  static func vertical(
+  public static func vertical(
     alignment: UIStackView.Alignment = .fill,
     spacing: CGFloat = 8,
     _ views: Stackable...

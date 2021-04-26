@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7952C8142636C7E600DBB4AD /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 7952C8132636C7E600DBB4AD /* AppFeature */; };
 		796AD38B2633350300240507 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796AD38A2633350300240507 /* AppDelegate.swift */; };
 		796AD3942633350300240507 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 796AD3932633350300240507 /* Assets.xcassets */; };
 		796AD3972633350300240507 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 796AD3952633350300240507 /* LaunchScreen.storyboard */; };
-		796AD3A6263341F100240507 /* TvMazeAppLib in Frameworks */ = {isa = PBXBuildFile; productRef = 796AD3A5263341F100240507 /* TvMazeAppLib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,7 +26,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				796AD3A6263341F100240507 /* TvMazeAppLib in Frameworks */,
+				7952C8142636C7E600DBB4AD /* AppFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,7 +85,7 @@
 			);
 			name = TvMazeApp;
 			packageProductDependencies = (
-				796AD3A5263341F100240507 /* TvMazeAppLib */,
+				7952C8132636C7E600DBB4AD /* AppFeature */,
 			);
 			productName = TvMazeApp;
 			productReference = 796AD3872633350300240507 /* TvMazeApp.app */;
@@ -338,9 +338,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		796AD3A5263341F100240507 /* TvMazeAppLib */ = {
+		7952C8132636C7E600DBB4AD /* AppFeature */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = TvMazeAppLib;
+			productName = AppFeature;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

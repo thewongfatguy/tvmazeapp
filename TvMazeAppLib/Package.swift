@@ -8,7 +8,9 @@ let package = Package(
   platforms: [.iOS(.v13)],
   products: [
     .library(name: "ApiClient", targets: ["ApiClient"]),
-    .library(name: "TvMazeAppLib", targets: ["TvMazeAppLib"]),
+    .library(name: "EpisodesFeature", targets: ["EpisodesFeature"]),
+    .library(name: "ShowFeature", targets: ["ShowFeature"]),
+    .library(name: "AppFeature", targets: ["AppFeature"]),
   ],
   dependencies: [
     .package(
@@ -34,6 +36,38 @@ let package = Package(
     // AppEnvironment
     .target(name: "AppEnvironment", dependencies: ["ApiClient"]),
 
+    // AppFeature
+    .target(
+      name: "AppFeature",
+      dependencies: [
+        "ShowFeature",
+        "EpisodesFeature",
+        "ApiClient",
+        "TinyConstraints",
+        "Kingfisher",
+        "Helpers",
+      ]
+    ),
+    //        .testTarget(
+    //            name: "TvMazeAppLibTests",
+    //            dependencies: ["TvMazeAppLib", "TestSupport"]),
+
+    // EpisodesFeature
+    .target(
+      name: "EpisodesFeature",
+      dependencies: [
+        "ApiClient",
+        "AppEnvironment",
+        "TinyConstraints",
+        "Kingfisher",
+        "Helpers",
+      ]
+    ),
+    //    .testTarget(
+    //      name: "EpisodesFeatureTests",
+    //      dependencies: ["EpisodesFeature", "TestSupport"]
+    //    ),
+
     // Helpers
     .target(name: "Helpers"),
 
@@ -48,29 +82,15 @@ let package = Package(
         "AppEnvironment",
         "TinyConstraints",
         "Kingfisher",
+        "Helpers",
       ]
     ),
     .testTarget(
       name: "ShowFeatureTests",
-      dependencies: ["TvMazeAppLib", "TestSupport"]
+      dependencies: ["ShowFeature", "TestSupport"]
     ),
 
     // TestSupport
-    .target(name: "TestSupport", dependencies: ["TvMazeAppLib", "ApiClient"]),
-
-    // TvMazeAppLib
-    .target(
-      name: "TvMazeAppLib",
-      dependencies: [
-        "ShowFeature",
-        "ApiClient",
-        "TinyConstraints",
-        "Kingfisher",
-        "Helpers",
-      ]
-    ),
-    //        .testTarget(
-    //            name: "TvMazeAppLibTests",
-    //            dependencies: ["TvMazeAppLib", "TestSupport"]),
+    .target(name: "TestSupport", dependencies: ["ApiClient"]),
   ]
 )

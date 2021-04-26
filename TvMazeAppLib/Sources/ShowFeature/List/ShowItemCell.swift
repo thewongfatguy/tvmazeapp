@@ -1,12 +1,7 @@
+import Helpers
 import Kingfisher
 import TinyConstraints
 import UIKit
-
-func with<A>(_ object: A, apply: (inout A) -> Void) -> A {
-  var copy = object
-  apply(&copy)
-  return copy
-}
 
 final class ShowItemCell: UICollectionViewCell {
 

@@ -1,5 +1,6 @@
 import ApiClient
 import Combine
+import Helpers
 import Models
 import UIKit
 
@@ -178,22 +179,5 @@ extension ShowsListViewController: UISearchBarDelegate {
 extension ShowsListViewController: UISearchControllerDelegate {
   func didDismissSearchController(_ searchController: UISearchController) {
     refresh()
-  }
-}
-
-extension Publisher where Failure == Never {
-
-  func handleUIChanges<O: AnyObject>(on object: O, with handler: @escaping (O) -> (Output) -> Void)
-    -> AnyCancellable
-  {
-    receive(on: DispatchQueue.main)
-      .sink { [weak object] output in
-        guard let object = object else {
-          return
-        }
-
-        let apply = handler(object)
-        apply(output)
-      }
   }
 }

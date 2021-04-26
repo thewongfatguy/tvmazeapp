@@ -1,10 +1,13 @@
 import Models
+import ShowFeature
 import UIKit
 
 public final class AppCoordinator {
 
   private let window: UIWindow
   private let rootNavigationController = UINavigationController()
+
+  private var coordinators: [UUID: AnyObject] = [:]
 
   public init(window: UIWindow) {
     self.window = window
@@ -13,24 +16,14 @@ public final class AppCoordinator {
   public func start() {
     window.rootViewController = rootNavigationController
 
-    let showsListViewController = ShowsListViewController()
+    let showCoordinator = ShowsCoordinator()
+    coordinators[showCoordinator.id] = showCoordinator
 
-    showsListViewController.didSelectShow = { [weak self] show in
-      self?.navigateToShowDetail(show)
-    }
+    showCoordinator.navigateToEpisodesList = navigateToEpisodesList
 
-    rootNavigationController.setViewControllers([showsListViewController], animated: false)
+    showCoordinator.start(in: rootNavigationController)
+
     window.makeKeyAndVisible()
-  }
-
-  private func navigateToShowDetail(_ show: Show) {
-    let controller = ShowDetailViewController(viewModel: ShowDetailViewModel(show: show))
-    controller.didTapShowAllEpisodes = { [weak self] in
-      self?.navigateToEpisodesList(show.id)
-    }
-
-    rootNavigationController.pushViewController(
-      controller, animated: true)
   }
 
   private func navigateToEpisodesList(_ showId: Id<Show>) {

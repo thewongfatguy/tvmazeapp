@@ -25,7 +25,7 @@ extension UIColor {
     String(format: "0x%08x", hex)
   }
 
-  var cssString: String {
+  public var cssString: String {
     let hex = self.hex
     if hex & 0xFF00_0000 == 0xFF00_0000 {
       return String(format: "#%06x", hex & 0xFFFFFF)

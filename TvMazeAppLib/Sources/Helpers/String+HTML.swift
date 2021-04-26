@@ -1,7 +1,7 @@
 import UIKit
 
 extension String {
-  func htmlAttributedString(
+  public func htmlAttributedString(
     size: CGFloat = UIFont.preferredFont(forTextStyle: .body).pointSize,
     color: UIColor = .label
   ) -> NSAttributedString? {
@@ -40,7 +40,7 @@ extension String {
     return attributedString
   }
 
-  func removingHTMLTags() -> String {
+  public func removingHTMLTags() -> String {
     guard let regex = try? NSRegularExpression(pattern: "<.*?>", options: .caseInsensitive) else {
       return self
     }

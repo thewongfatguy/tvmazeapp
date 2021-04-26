@@ -1,4 +1,5 @@
 import ApiClient
+import AppEnvironment
 import Combine
 import Foundation
 import Models
@@ -100,24 +101,5 @@ private final class _ShowListViewModel {
       .map { Output.showsLoaded($0, source: .search) }
 
     return shows.eraseToAnyPublisher()
-  }
-}
-
-//
-//extension Publisher where Failure: Error {
-//  func forwardError<S>(to sink: S) -> AnyPublisher<Output, Never>
-//  where S: Subject, S.Output == Failure, S.Failure == Never {
-//    `catch` { error -> Empty<Output, Never> in
-//      sink.send(error)
-//      return Empty()
-//    }.eraseToAnyPublisher()
-//  }
-//}
-//
-extension Publisher {
-  func mapToResult() -> AnyPublisher<Result<Output, Failure>, Never> {
-    map(Result.success)
-      .catch { Just(.failure($0)) }
-      .eraseToAnyPublisher()
   }
 }

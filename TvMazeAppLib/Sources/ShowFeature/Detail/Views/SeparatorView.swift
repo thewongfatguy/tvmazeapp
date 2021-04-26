@@ -1,3 +1,4 @@
+import Helpers
 import UIKit
 
 final class SeparatorView: BaseView {

@@ -31,8 +31,29 @@ let package = Package(
       ]
     ),
 
+    // AppEnvironment
+    .target(name: "AppEnvironment", dependencies: ["ApiClient"]),
+
+    // Helpers
+    .target(name: "Helpers"),
+
     // Models
     .target(name: "Models", dependencies: ["Tagged"]),
+
+    // ShowFeature
+    .target(
+      name: "ShowFeature",
+      dependencies: [
+        "ApiClient",
+        "AppEnvironment",
+        "TinyConstraints",
+        "Kingfisher",
+      ]
+    ),
+    .testTarget(
+      name: "ShowFeatureTests",
+      dependencies: ["TvMazeAppLib", "TestSupport"]
+    ),
 
     // TestSupport
     .target(name: "TestSupport", dependencies: ["TvMazeAppLib", "ApiClient"]),
@@ -41,13 +62,15 @@ let package = Package(
     .target(
       name: "TvMazeAppLib",
       dependencies: [
+        "ShowFeature",
         "ApiClient",
         "TinyConstraints",
         "Kingfisher",
+        "Helpers",
       ]
     ),
-    .testTarget(
-      name: "TvMazeAppLibTests",
-      dependencies: ["TvMazeAppLib", "TestSupport"]),
+    //        .testTarget(
+    //            name: "TvMazeAppLibTests",
+    //            dependencies: ["TvMazeAppLib", "TestSupport"]),
   ]
 )

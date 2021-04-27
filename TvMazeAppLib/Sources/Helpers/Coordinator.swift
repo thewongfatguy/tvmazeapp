@@ -10,7 +10,7 @@ import Foundation
 open class Coordinator {
 
   public let id = UUID()
-  public var children: [UUID: Coordinator] = [:]
+  private(set) public var children: [UUID: Coordinator] = [:]
 
   private(set) public var didFinish: (() -> Void)!
 

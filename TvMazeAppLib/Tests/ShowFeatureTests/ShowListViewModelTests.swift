@@ -156,7 +156,9 @@ final class ShowListViewModelTests: XCTestCase {
 
 extension Show {
   static func stub(
-    id: Int = 1, name: String = "Game of Thrones",
+    id: Int = 1,
+    name: String = "Game of Thrones",
+    url: URL = URL(fileURLWithPath: ""),
     genres: [String]? = ["Drama"],
     schedule: Schedule? = .init(time: "22:00", days: ["Sunday"]),
     image: Image = Image(
@@ -165,6 +167,7 @@ extension Show {
   ) -> Show {
     Show(
       id: Id(rawValue: id),
+      url: url,
       name: name,
       genres: genres,
       schedule: schedule,

@@ -1,7 +1,7 @@
 import Helpers
 import UIKit
 
-final class EpisodesListView: BaseView {
+final class EpisodesListView: BaseView, UITableViewDelegate {
 
   private enum Section: Hashable {
     case main
@@ -14,9 +14,10 @@ final class EpisodesListView: BaseView {
     Section, EpisodesListViewModel.Output.EpisodeDisplay
   >
 
-  private let tableView = with(UITableView(frame: .zero, style: .plain)) {
+  private lazy var tableView = with(UITableView(frame: .zero, style: .plain)) {
     $0.register(EpisodeCell.self, forCellReuseIdentifier: EpisodeCell.reuseIdentifier)
     $0.rowHeight = 128
+    $0.delegate = self
   }
 
   private lazy var dataSource = DataSource(tableView: tableView) {
@@ -28,6 +29,8 @@ final class EpisodesListView: BaseView {
     return cell
   }
 
+  var didTapShareEpisode: ((EpisodesListViewModel.Output.EpisodeDisplay) -> Void)!
+
   override func setupViewHierarchy() {
     addSubview(tableView)
   }
@@ -36,6 +39,26 @@ final class EpisodesListView: BaseView {
     tableView.edgesToSuperview()
   }
 
+  func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+    false
+  }
+
+  func tableView(
+    _ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint
+  ) -> UIContextMenuConfiguration? {
+    guard let episode = dataSource.itemIdentifier(for: indexPath) else {
+      return nil
+    }
+
+    return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { actions -> UIMenu? in
+      let shareAction = UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up"))
+      { _ in
+        self.didTapShareEpisode(episode)
+      }
+
+      return UIMenu(children: [shareAction])
+    }
+  }
 }
 
 extension EpisodesListView {

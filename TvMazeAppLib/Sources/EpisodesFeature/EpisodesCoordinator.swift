@@ -15,6 +15,14 @@ public final class EpisodesCoordinator: Coordinator {
   public override func start() {
     let controller = EpisodesListViewController(viewModel: .default(forShowId: showId))
     controller.didFinish = didFinish
+    controller.didTapShareEpisode = { [weak self] episode in
+      self?.presentShareActivity(episode.url)
+    }
     navigationController.pushViewController(controller, animated: true)
+  }
+
+  private func presentShareActivity(_ url: URL) {
+    let controller = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+    navigationController.present(controller, animated: true)
   }
 }

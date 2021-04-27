@@ -1,14 +1,20 @@
 import Combine
+import Helpers
+import Models
 import UIKit
 
 final class EpisodesListViewController: UIViewController {
 
   public var didFinish: (() -> Void)?
 
+  public var didTapShareEpisode: ((Episode) -> Void)!
+
   private let viewModel: EpisodesListViewModel
   private var cancellable: AnyCancellable?
 
-  private let rootView = EpisodesListView()
+  private lazy var rootView = with(EpisodesListView()) {
+    $0.didTapShareEpisode = { [weak self] in self?.didTapShareEpisode($0.episode) }
+  }
 
   init(viewModel: EpisodesListViewModel) {
     self.viewModel = viewModel

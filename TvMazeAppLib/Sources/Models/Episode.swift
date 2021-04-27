@@ -9,6 +9,7 @@ import Foundation
 
 public struct Episode: Decodable, Hashable {
 
+  public let url: URL
   public let season: Int
   public let number: Int
   //    public let airdate: Date

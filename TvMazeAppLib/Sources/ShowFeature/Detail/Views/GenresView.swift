@@ -21,7 +21,11 @@ extension ShowDetailView {
         }
 
         genres
-          .map(GenresView.makeLabel(for:))
+          .map { genre in
+            with(ChipView()) {
+              $0.text = genre
+            }
+          }
           .forEach { stackView.addArrangedSubview($0) }
       }
     }
@@ -35,21 +39,6 @@ extension ShowDetailView {
       scrollView.edgesToSuperview()
       stackView.edgesToSuperview()
       stackView.height(to: self)
-    }
-
-    private static func makeLabel(for genre: String) -> UIView {
-      let containerView = UIView()
-      containerView.backgroundColor = .secondarySystemBackground
-      containerView.layer.cornerRadius = 4
-      containerView.layer.masksToBounds = true
-
-      let label = UILabel()
-      label.text = genre
-      label.font = .preferredFont(forTextStyle: .headline)
-      containerView.addSubview(label)
-      label.edgesToSuperview(insets: .uniform(4))
-
-      return containerView
     }
   }
 }

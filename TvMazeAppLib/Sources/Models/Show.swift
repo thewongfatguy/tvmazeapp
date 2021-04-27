@@ -14,7 +14,7 @@ public struct ShowSearch: Decodable {
 
 public struct Show: Decodable, Hashable {
   public let id: Id<Show>
-  //  public let url: URL
+  public let url: URL
   public let name: String
   //  public let type: String
   //  public let language: String

@@ -9,6 +9,7 @@ final class ShowDetailViewController: UIViewController {
   )
 
   var didTapShowAllEpisodes: (() -> Void)!
+  var didTapShareButton: (() -> Void)!
 
   init(viewModel: ShowDetailViewModel) {
     self.viewModel = viewModel
@@ -26,9 +27,17 @@ final class ShowDetailViewController: UIViewController {
     rootView.render(detail)
 
     title = detail.name
+    navigationItem.rightBarButtonItem = UIBarButtonItem(
+      image: UIImage(systemName: "square.and.arrow.up"), style: .plain, target: self,
+      action: #selector(shareTapped))
   }
 
   override func loadView() {
     view = rootView
+  }
+
+  @objc
+  private func shareTapped() {
+    didTapShareButton()
   }
 }

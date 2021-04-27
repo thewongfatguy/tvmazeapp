@@ -22,8 +22,13 @@ public final class ShowsCoordinator: Coordinator {
 
   private func navigateToShowDetail(_ show: Show) {
     let controller = ShowDetailViewController(viewModel: ShowDetailViewModel(show: show))
+
     controller.didTapShowAllEpisodes = { [weak self] in
       self?.navigateToEpisodesList(show.id)
+    }
+
+    controller.didTapShareButton = { [weak self] in
+      self?.presentShareActivity(show.url)
     }
 
     navigationController.pushViewController(
@@ -31,4 +36,9 @@ public final class ShowsCoordinator: Coordinator {
   }
 
   public var navigateToEpisodesList: ((Id<Show>) -> Void)!
+
+  private func presentShareActivity(_ url: URL) {
+    let controller = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+    navigationController.present(controller, animated: true)
+  }
 }

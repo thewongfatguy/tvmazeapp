@@ -1,10 +1,11 @@
 import Combine
 import TestSupport
 import XCTest
+import AppEnvironment
 
 @testable import ApiClient
 @testable import Models
-@testable import TvMazeAppLib
+@testable import ShowFeature
 
 final class ShowListViewModelTests: XCTestCase {
 

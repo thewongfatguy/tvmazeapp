@@ -40,6 +40,7 @@ let package = Package(
     .target(
       name: "AppFeature",
       dependencies: [
+        "L10n",
         "ShowFeature",
         "EpisodesFeature",
         "ApiClient",
@@ -48,14 +49,12 @@ let package = Package(
         "Helpers",
       ]
     ),
-    //        .testTarget(
-    //            name: "TvMazeAppLibTests",
-    //            dependencies: ["TvMazeAppLib", "TestSupport"]),
 
     // EpisodesFeature
     .target(
       name: "EpisodesFeature",
       dependencies: [
+        "L10n",
         "ApiClient",
         "AppEnvironment",
         "TinyConstraints",
@@ -63,14 +62,17 @@ let package = Package(
         "Helpers",
       ]
     ),
-    //    .testTarget(
-    //      name: "EpisodesFeatureTests",
-    //      dependencies: ["EpisodesFeature", "TestSupport"]
-    //    ),
 
     // Helpers
     .target(name: "Helpers", dependencies: ["TinyConstraints"]),
     .testTarget(name: "HelpersTests", dependencies: ["Helpers"]),
+
+    .target(
+      name: "L10n",
+      resources: [
+        .process("L10n.strings")
+      ]
+    ),
 
     // Models
     .target(name: "Models", dependencies: ["Tagged"]),
@@ -79,6 +81,7 @@ let package = Package(
     .target(
       name: "ShowFeature",
       dependencies: [
+        "L10n",
         "ApiClient",
         "AppEnvironment",
         "TinyConstraints",

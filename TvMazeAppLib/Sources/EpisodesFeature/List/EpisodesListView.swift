@@ -1,4 +1,5 @@
 import Helpers
+import L10n
 import UIKit
 
 final class EpisodesListView: BaseView, UITableViewDelegate {
@@ -51,8 +52,9 @@ final class EpisodesListView: BaseView, UITableViewDelegate {
     }
 
     return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { actions -> UIMenu? in
-      let shareAction = UIAction(title: "Share", image: UIImage(systemName: "square.and.arrow.up"))
-      { _ in
+      let shareAction = UIAction(
+        title: L10n.Common.share, image: UIImage(systemName: "square.and.arrow.up")
+      ) { _ in
         self.didTapShareEpisode(episode)
       }
 

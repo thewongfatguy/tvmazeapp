@@ -1,5 +1,6 @@
 import Combine
 import Helpers
+import L10n
 import Models
 import UIKit
 
@@ -33,7 +34,7 @@ final class EpisodesListViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    title = "All episodes"
+    title = L10n.EpisodeFeature.List.title
 
     cancellable = viewModel.fetchEpisodes()
       .handleUIChanges(on: rootView, with: EpisodesListView.handleViewModelOutputs)

@@ -20,8 +20,6 @@ final class ShowItemCell: UICollectionViewCell {
     $0.numberOfLines = 1
     $0.font = .preferredFont(forTextStyle: .headline)
     $0.textColor = .white
-
-    $0.text = "Example name"
   }
 
   override init(frame: CGRect) {

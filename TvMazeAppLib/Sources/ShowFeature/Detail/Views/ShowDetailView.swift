@@ -1,4 +1,5 @@
 import Helpers
+import L10n
 import UIKit
 
 final class ShowDetailView: BaseView {
@@ -55,7 +56,7 @@ final class ShowDetailView: BaseView {
 
     mainHorizontalStackView.addArrangedSubview(
       with(UIButton(type: .system)) {
-        $0.setTitle("See all episodes", for: .normal)
+        $0.setTitle(L10n.GameFeature.Detail.seelAllEpisodes, for: .normal)
         $0.titleLabel?.font = .preferredFont(forTextStyle: .headline)
         $0.contentEdgeInsets = .uniform(20)
         $0.addTarget(self, action: #selector(showAllEpisodesTapped), for: .touchUpInside)

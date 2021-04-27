@@ -1,6 +1,7 @@
 import ApiClient
 import Combine
 import Helpers
+import L10n
 import Models
 import UIKit
 
@@ -80,7 +81,7 @@ final class ShowsListViewController: UICollectionViewController {
     super.viewDidLoad()
 
     collectionView.backgroundColor = .systemBackground
-    title = "TvMaze App"
+    title = L10n.Common.appName
 
     collectionView.register(
       ShowItemCell.self, forCellWithReuseIdentifier: ShowItemCell.reuseIdentifier)

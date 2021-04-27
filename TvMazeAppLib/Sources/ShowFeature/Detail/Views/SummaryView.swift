@@ -1,11 +1,12 @@
 import Helpers
+import L10n
 import UIKit
 
 extension ShowDetailView {
   final class SummaryView: BaseView {
 
     private let titleLabel = with(UILabel()) {
-      $0.text = "Summary"
+      $0.text = L10n.GameFeature.Detail.summary
       $0.font = .preferredFont(forTextStyle: .headline)
     }
 

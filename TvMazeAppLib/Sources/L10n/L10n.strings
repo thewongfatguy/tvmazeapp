@@ -1,0 +1,12 @@
+// MARK: - Common
+
+"Common.AppName" = "TvMaze App";
+"Common.Share" = "Share";
+
+// MARK: - Episode Feature
+
+"EpisodeFeature.List.Title" = "All episodes";
+
+// MARK: - Game Feature
+"GameFeature.Detail.SeelAllEpisodes" = "See all episodes";
+"GameFeature.Detail.Summary" = "Summary";

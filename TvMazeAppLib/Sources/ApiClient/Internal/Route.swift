@@ -1,14 +1,7 @@
-//
-//  File.swift
-//
-//
-//  Created by Guilherme Souza on 23/04/21.
-//
-
 import Foundation
 import Models
 
-internal struct Route: CustomStringConvertible {
+struct Route: CustomStringConvertible {
   let path: String
   let method: Method
   let query: [URLQueryItem]?
@@ -50,10 +43,13 @@ extension Route {
 }
 
 extension Route {
+
+  /// GET /shows?page=<page>
   static func shows(_ page: Int) -> Route {
     Route(path: "/shows", method: .get, query: [URLQueryItem(name: "page", value: "\(page)")])
   }
 
+  /// GET /search/shows?q=<term>
   static func searchShows(_ term: String) -> Route {
     Route(
       path: "/search/shows",
@@ -64,6 +60,7 @@ extension Route {
     )
   }
 
+  /// GET /shows/<showId>/episodes
   static func showsEpisodes(_ showId: Id<Show>) -> Route {
     Route(
       path: "/shows/\(showId.rawValue)/episodes",

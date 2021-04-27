@@ -1,16 +1,16 @@
+import Helpers
 import Models
 import UIKit
 
-public final class ShowsCoordinator {
+public final class ShowsCoordinator: Coordinator {
 
-  public let id = UUID()
+  private let navigationController: UINavigationController
 
-  private var navigationController: UINavigationController!
-
-  public init() {}
-
-  public func start(in navigationController: UINavigationController) {
+  public init(navigationController: UINavigationController) {
     self.navigationController = navigationController
+  }
+
+  public override func start() {
     let showsListViewController = ShowsListViewController()
 
     showsListViewController.didSelectShow = { [weak self] show in

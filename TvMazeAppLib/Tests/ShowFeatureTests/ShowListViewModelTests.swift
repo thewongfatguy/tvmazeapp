@@ -1,7 +1,7 @@
+import AppEnvironment
 import Combine
 import TestSupport
 import XCTest
-import AppEnvironment
 
 @testable import ApiClient
 @testable import Models

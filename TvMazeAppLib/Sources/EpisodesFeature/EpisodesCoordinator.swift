@@ -1,18 +1,20 @@
+import Helpers
 import Models
 import UIKit
 
-public final class EpisodesCoordinator {
+public final class EpisodesCoordinator: Coordinator {
 
-  public let id = UUID()
+  private let navigationController: UINavigationController
+  private let showId: Id<Show>
 
-  public init() {}
+  public init(in navigationController: UINavigationController, forShowId showId: Id<Show>) {
+    self.navigationController = navigationController
+    self.showId = showId
+  }
 
-  public func start(
-    in navigationController: UINavigationController, forShowId showId: Id<Show>,
-    onCompletion: @escaping () -> Void
-  ) {
+  public override func start() {
     let controller = EpisodesListViewController(viewModel: .default(forShowId: showId))
-    controller.didFinish = onCompletion
+    controller.didFinish = didFinish
     navigationController.pushViewController(controller, animated: true)
   }
 }

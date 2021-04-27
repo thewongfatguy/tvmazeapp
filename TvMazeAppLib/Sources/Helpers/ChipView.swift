@@ -11,11 +11,11 @@ public final class ChipView: BaseView {
     set { label.text = newValue }
   }
 
-    public var isSelected: Bool = false {
-        didSet {
-            backgroundColor = isSelected ? .systemBlue : .secondarySystemBackground
-        }
+  public var isSelected: Bool = false {
+    didSet {
+      backgroundColor = isSelected ? .systemBlue : .secondarySystemBackground
     }
+  }
 
   override public func setupViewHierarchy() {
     addSubview(label)

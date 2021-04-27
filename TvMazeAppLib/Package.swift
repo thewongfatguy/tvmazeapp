@@ -69,7 +69,8 @@ let package = Package(
     //    ),
 
     // Helpers
-    .target(name: "Helpers"),
+    .target(name: "Helpers", dependencies: ["TinyConstraints"]),
+    .testTarget(name: "HelpersTests", dependencies: ["Helpers"]),
 
     // Models
     .target(name: "Models", dependencies: ["Tagged"]),

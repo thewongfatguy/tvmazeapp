@@ -48,6 +48,16 @@
                ReferencedContainer = "container:../TvMazeAppLib">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "HelpersTests"
+               BuildableName = "HelpersTests"
+               BlueprintName = "HelpersTests"
+               ReferencedContainer = "container:../TvMazeAppLib">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

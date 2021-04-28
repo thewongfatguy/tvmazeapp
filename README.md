@@ -1,4 +1,3 @@
-
 # TvMaze App
 
 This is an app built as a coding challenge, it was built with simplicity in mind and to showcase some of my knowledges.
@@ -7,6 +6,8 @@ This is an app built as a coding challenge, it was built with simplicity in mind
 ## Getting started 
 
 To run it locally just clone the repository and open the `TvMazeApp.xcworkspace` in `Xcode`.
+
+The project was built using Xcode 12.4, older versions may not work.
 
 ```bash 
   git clone https://github.com/grsouza/tvmazeapp
@@ -69,3 +70,8 @@ If you take a look at `./TvMazeAppLib/Package.swift` you will see the definition
 ### Architectural decisions
 
 The application is built using `MVVM + Coordinator` and using `Combine` for communication between the layers.
+
+
+### Continuous Integration
+
+I've setup a CI system using Github Actions, but unfortunatly I exceeded my monthly quota, so the last pipelines are failing. The CI workflow can be found at `.github/workflows/test.yml`.

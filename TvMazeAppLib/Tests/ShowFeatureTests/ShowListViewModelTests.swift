@@ -32,9 +32,6 @@ final class ShowListViewModelTests: XCTestCase {
         .isRefreshing(false),
       ]
     )
-
-    // TODO:
-    //    XCTAssertEqual(viewModel.currentPage, 0)
   }
 
   func test_Refresh_ReturnsShowList() {
@@ -119,8 +116,6 @@ final class ShowListViewModelTests: XCTestCase {
         .showsLoaded(.success([.init(show: .stub())]), source: .search)
       ]
     )
-    // TODO:
-    //    XCTAssertTrue(viewModel.isInSearchMode)
   }
 
   func test_Search_ReturnsError() {
@@ -138,19 +133,6 @@ final class ShowListViewModelTests: XCTestCase {
         .showsLoaded(.failure(_Error() as NSError), source: .search)
       ]
     )
-
-    // TODO:
-    //    XCTAssertTrue(viewModel.isInSearchMode)
-  }
-
-  func test_Refresh_ShouldSetSearchModeToFalse() {
-    //    Env.apiClient.searchShows = { _ in Empty().eraseToAnyPublisher() }
-    //    _ = await(viewModel.search("game of"))
-    //    XCTAssertTrue(viewModel.isInSearchMode)
-    //
-    //    Env.apiClient.shows = { _ in Empty().eraseToAnyPublisher() }
-    //    _ = await(viewModel.refresh())
-    //    XCTAssertFalse(viewModel.isInSearchMode)
   }
 }
 

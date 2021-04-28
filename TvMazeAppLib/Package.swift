@@ -70,7 +70,13 @@ let package = Package(
     ),
 
     // Helpers
-    .target(name: "Helpers", dependencies: ["TinyConstraints"]),
+    .target(
+      name: "Helpers",
+      dependencies: [
+        "TinyConstraints",
+        .product(name: "Logging", package: "swift-log"),
+      ]
+    ),
     .testTarget(name: "HelpersTests", dependencies: ["Helpers"]),
 
     .target(

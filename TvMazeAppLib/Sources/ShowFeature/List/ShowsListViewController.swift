@@ -125,9 +125,17 @@ final class ShowsListViewController: UICollectionViewController {
       snapshot.appendItems(shows, toSection: .main)
       dataSource.apply(snapshot)
 
-    case .showsLoaded(.failure(_), _):
-      // TODO: handle error
-      break
+    case .showsLoaded(.failure(let error), let source):
+      presentErrorAlert(error) { [weak self] in
+        switch source {
+        case .search:
+          self?.search(self?.searchController.searchBar.text ?? "")
+        case .refresh:
+          self?.refresh()
+        case .loadNextPage:
+          self?.loadNextPage()
+        }
+      }
 
     case .isRefreshing(true):
       refreshControl.beginRefreshing()

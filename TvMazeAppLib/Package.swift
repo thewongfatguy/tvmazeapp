@@ -24,7 +24,13 @@ let package = Package(
   targets: [
     // ApiClient
     .target(
-      name: "ApiClient", dependencies: [.product(name: "Logging", package: "swift-log"), "Models"]),
+      name: "ApiClient",
+      dependencies: [
+        .product(name: "Logging", package: "swift-log"),
+        "Models",
+        "Helpers",
+      ]
+    ),
     .testTarget(
       name: "ApiClientTests",
       dependencies: ["ApiClient", "SnapshotTesting"],

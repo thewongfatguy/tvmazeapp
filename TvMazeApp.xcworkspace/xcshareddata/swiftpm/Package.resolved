@@ -20,7 +20,7 @@
         }
       },
       {
-        "package": "SnapshotTesting",
+        "package": "swift-snapshot-testing",
         "repositoryURL": "https://github.com/pointfreeco/swift-snapshot-testing.git",
         "state": {
           "branch": null,
@@ -29,7 +29,7 @@
         }
       },
       {
-        "package": "Tagged",
+        "package": "swift-tagged",
         "repositoryURL": "https://github.com/pointfreeco/swift-tagged",
         "state": {
           "branch": null,

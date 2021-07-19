@@ -16,7 +16,8 @@ let package = Package(
     .package(
       name: "SnapshotTesting", url: "https://github.com/pointfreeco/swift-snapshot-testing.git",
       from: "1.8.1"),
-    .package(name: "Tagged", url: "https://github.com/pointfreeco/swift-tagged", from: "0.5.0"),
+    .package(
+      name: "swift-tagged", url: "https://github.com/pointfreeco/swift-tagged", from: "0.5.0"),
     .package(url: "https://github.com/roberthein/TinyConstraints", from: "4.0.0"),
     .package(url: "https://github.com/onevcat/Kingfisher.git", from: "6.0.0"),
     .package(url: "https://github.com/apple/swift-log", from: "1.4.2"),
@@ -87,7 +88,12 @@ let package = Package(
     ),
 
     // Models
-    .target(name: "Models", dependencies: ["Tagged"]),
+    .target(
+      name: "Models",
+      dependencies: [
+        .product(name: "Tagged", package: "swift-tagged")
+      ]
+    ),
 
     // ShowFeature
     .target(
@@ -103,7 +109,7 @@ let package = Package(
     ),
     .testTarget(
       name: "ShowFeatureTests",
-      dependencies: ["ShowFeature", "TestSupport"]
+      dependencies: ["ShowFeature", "TestSupport", "AppEnvironment"]
     ),
 
     // TestSupport

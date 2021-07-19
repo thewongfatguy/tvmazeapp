@@ -21,4 +21,9 @@ platform :ios do
     build_app(scheme: "TvMazeApp")
     upload_to_testflight
   end
+
+  desc "Run tests"
+  lane :test do
+    scan(scheme: "TvMazeApp", device: "iPhone 12 Pro")
+  end
 end

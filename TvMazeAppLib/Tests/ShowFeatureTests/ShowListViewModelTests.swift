@@ -22,7 +22,7 @@ final class ShowListViewModelTests: XCTestCase {
 
     Env.apiClient.shows = { _ in Fail(error: _Error()).eraseToAnyPublisher() }
 
-    let events = await(viewModel.refresh())
+    let events = `await`(viewModel.refresh())
 
     XCTAssertEqual(
       events,
@@ -43,7 +43,7 @@ final class ShowListViewModelTests: XCTestCase {
         .eraseToAnyPublisher()
     }
 
-    let events = await(viewModel.refresh())
+    let events = `await`(viewModel.refresh())
 
     XCTAssertEqual(
       events,
@@ -64,7 +64,7 @@ final class ShowListViewModelTests: XCTestCase {
         .eraseToAnyPublisher()
     }
 
-    let events = await(viewModel.loadNextPage())
+    let events = `await`(viewModel.loadNextPage())
 
     XCTAssertEqual(
       events,
@@ -85,7 +85,7 @@ final class ShowListViewModelTests: XCTestCase {
         .eraseToAnyPublisher()
     }
 
-    let events = await(viewModel.loadNextPage())
+    let events = `await`(viewModel.loadNextPage())
 
     XCTAssertEqual(
       events,
@@ -98,7 +98,7 @@ final class ShowListViewModelTests: XCTestCase {
   }
 
   func test_Search_WithEmptyTerm_ShouldReturnNothing() {
-    let events = await(viewModel.search(""))
+    let events = `await`(viewModel.search(""))
     XCTAssertTrue(events.isEmpty)
   }
 
@@ -109,7 +109,7 @@ final class ShowListViewModelTests: XCTestCase {
         .eraseToAnyPublisher()
     }
 
-    let events = await(viewModel.search("game of"))
+    let events = `await`(viewModel.search("game of"))
     XCTAssertEqual(
       events,
       [
@@ -126,7 +126,7 @@ final class ShowListViewModelTests: XCTestCase {
         .eraseToAnyPublisher()
     }
 
-    let events = await(viewModel.search("game of"))
+    let events = `await`(viewModel.search("game of"))
     XCTAssertEqual(
       events,
       [
@@ -167,7 +167,7 @@ extension FetchShowsResult {
 
 extension XCTestCase {
 
-  func await<P: Publisher>(
+  func `await`<P: Publisher>(
     _ publisher: P,
     timeout: TimeInterval = 10,
     file: StaticString = #file,

@@ -26,6 +26,11 @@ Push a new beta build to TestFlight
 fastlane ios test
 ```
 Run tests
+### ios upload_symbols
+```
+fastlane ios upload_symbols
+```
+Upload dSYMs to Sentry
 
 ----
 

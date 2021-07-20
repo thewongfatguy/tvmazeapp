@@ -1,30 +1,37 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
 default_platform(:ios)
 
 platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
     match(type: "appstore")
-    build_app(scheme: "TvMazeApp")
-    upload_to_testflight
+    build_app(
+      scheme: "TvMazeApp",
+      cloned_source_packages_path: ".build/SourcePackages",
+      derived_data_path: ".build/DerivedData",
+      build_path: ".build",
+      output_directory: ".build",
+      buildlog_path: ".build/build_log"
+    )
+    upload_to_testflight(skip_waiting_for_build_processing: true)
   end
 
   desc "Run tests"
   lane :test do
-    scan(scheme: "TvMazeApp", device: "iPhone 12 Pro")
+    scan(
+      scheme: "TvMazeApp",
+      device: "iPhone 12 Pro",
+      cloned_source_packages_path: ".build/SourcePackages",
+      derived_data_path: ".build/DerivedData"
+    )
+  end
+
+  desc "Upload dSYMs to Sentry"
+  lane :upload_symbols do
+    download_dsyms
+    sentry_upload_dsym(
+      auth_token: ENV['SENTRY_AUTH_TOKEN'],
+      org_slug: 'grdsdev',
+      project_slug: 'fintop'
+    )
   end
 end

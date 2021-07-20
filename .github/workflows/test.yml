@@ -1,5 +1,9 @@
 name: Tests
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches: [main]
@@ -12,7 +16,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Select Xcode 12.4
-        run: sudo xcode-select -s /Applications/Xcode_12.4.app
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - uses: actions/cache@v2
+        with:
+          path: .build
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+      - name: Make Secrets.swift
+        run: make secrets
       - name: Run tests
         run: make test

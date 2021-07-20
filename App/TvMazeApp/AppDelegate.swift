@@ -28,6 +28,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     SentrySDK.start { options in
       options.dsn = Secrets.sentryDsn
+      options.tracesSampleRate = 1.0
       options.debug = isDebug
     }
 

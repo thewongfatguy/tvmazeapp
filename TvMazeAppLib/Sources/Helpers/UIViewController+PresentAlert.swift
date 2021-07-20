@@ -1,7 +1,5 @@
-import Logging
+import Logger
 import UIKit
-
-let logger = Logger(label: "dev.grds.tvmazeapp.helpers")
 
 public protocol PresentableError: Error {
   var errorMessage: String { get }
@@ -12,7 +10,7 @@ extension UIViewController {
     let message = (error as? PresentableError)?.errorMessage
 
     if message == nil {
-      logger.warning("Unhandled error being presented: \(error)")
+      Logger.main.warning("Unhandled error being presented: \(error)")
     }
 
     let alertController = UIAlertController(

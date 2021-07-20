@@ -1,9 +1,7 @@
 import Combine
 import Foundation
-import Logging
+import Logger
 import Models
-
-private let logger = Logger(label: "dev.grds.tvmazeapp.apiclient")
 
 public struct FetchShowsResult {
   public let page: Int
@@ -62,7 +60,7 @@ extension ApiClient {
       .handleEvents(
         receiveSubscription: { _ in
           #if DEBUG
-            logger.info("->> \(route)")
+            Logger.main.info("->> \(route)")
           #endif
         },
         receiveOutput: { _, response in
@@ -70,13 +68,13 @@ extension ApiClient {
             let httpResponse = response as! HTTPURLResponse
             let status = httpResponse.statusCode
 
-            logger.info("<<- \(route) - status=\(status)")
+            Logger.main.info("<<- \(route) - status=\(status)")
           #endif
         },
         receiveCompletion: { completion in
           #if DEBUG
             if case let .failure(error) = completion {
-              logger.info("request error: \(error)")
+              Logger.main.info("request error: \(error)")
             }
           #endif
         }
@@ -97,7 +95,7 @@ extension Publisher where Output == (data: Data, response: URLResponse), Failure
         do {
           return try JSONDecoder().decode(A.self, from: data)
         } catch {
-          logger.error("error decoding type '\(A.self)': \(error)")
+          Logger.main.error("error decoding type '\(A.self)': \(error)")
           throw error
         }
       }

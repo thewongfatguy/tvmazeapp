@@ -20,14 +20,14 @@ let package = Package(
       name: "swift-tagged", url: "https://github.com/pointfreeco/swift-tagged", from: "0.5.0"),
     .package(url: "https://github.com/roberthein/TinyConstraints", from: "4.0.0"),
     .package(url: "https://github.com/onevcat/Kingfisher.git", from: "6.0.0"),
-    .package(url: "https://github.com/apple/swift-log", from: "1.4.2"),
+    .package(name: "Logger", url: "https://github.com/nativedevbr/swift-log.git", .branch("main")),
   ],
   targets: [
     // ApiClient
     .target(
       name: "ApiClient",
       dependencies: [
-        .product(name: "Logging", package: "swift-log"),
+        "Logger",
         "Models",
         "Helpers",
       ]
@@ -75,7 +75,7 @@ let package = Package(
       name: "Helpers",
       dependencies: [
         "TinyConstraints",
-        .product(name: "Logging", package: "swift-log"),
+        "Logger",
       ]
     ),
     .testTarget(name: "HelpersTests", dependencies: ["Helpers"]),

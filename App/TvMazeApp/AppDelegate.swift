@@ -6,14 +6,9 @@
 //
 
 import AppFeature
+import Logger
 import Sentry
 import UIKit
-
-#if DEBUG
-  let isDebug = true
-#else
-  let isDebug = false
-#endif
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -29,13 +24,20 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     SentrySDK.start { options in
       options.dsn = Secrets.sentryDsn
       options.tracesSampleRate = 1.0
-      options.debug = isDebug
     }
+
+    Logger.main = Logger(system: "dev.grds.tvmazeapp", destinations: [.console(), .sentry])
 
     window = UIWindow(frame: UIScreen.main.bounds)
     appCoordinator = AppCoordinator(window: window!)
     appCoordinator.start()
 
     return true
+  }
+}
+
+extension Logger.Destination {
+  static let sentry = Logger.Destination { msg in
+    SentrySDK.capture(message: Logger.Formatter.default.format(msg))
   }
 }

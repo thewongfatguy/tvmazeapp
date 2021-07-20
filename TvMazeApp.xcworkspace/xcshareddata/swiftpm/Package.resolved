@@ -20,12 +20,21 @@
         }
       },
       {
-        "package": "swift-log",
-        "repositoryURL": "https://github.com/apple/swift-log",
+        "package": "JSON",
+        "repositoryURL": "https://github.com/grsouza/swift-json",
         "state": {
-          "branch": null,
-          "revision": "5d66f7ba25daf4f94100e7022febf3c75e37a6c7",
-          "version": "1.4.2"
+          "branch": "main",
+          "revision": "a4c641421ea495dff23398feb14b991ba63d4062",
+          "version": null
+        }
+      },
+      {
+        "package": "Logger",
+        "repositoryURL": "https://github.com/nativedevbr/swift-log.git",
+        "state": {
+          "branch": "main",
+          "revision": "0bcf110c49195994c3df8aa5b594477df40c6135",
+          "version": null
         }
       },
       {
@@ -35,6 +44,15 @@
           "branch": null,
           "revision": "f8a9c997c3c1dab4e216a8ec9014e23144cbab37",
           "version": "1.9.0"
+        }
+      },
+      {
+        "package": "Sqlite",
+        "repositoryURL": "https://github.com/grsouza/swift-sqlite",
+        "state": {
+          "branch": "main",
+          "revision": "d074e00f482f6b08510bb256f5eda5b76279f64c",
+          "version": null
         }
       },
       {

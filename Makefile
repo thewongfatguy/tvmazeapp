@@ -1,10 +1,12 @@
-PLATFORM_IOS = iOS Simulator,name=iPhone 12 Pro,OS=14.4
+.PHONY: setup-dev
+setup-dev:
+	@bundle install
+	@brew install swift-format
+	@brew install swiftgen
+
 .PHONY: test
 test:
-	@xcodebuild test \
-		-workspace TvMazeApp.xcworkspace \
-		-scheme TvMazeApp \
-		-destination platform="$(PLATFORM_IOS)"
+	@bundle exec fastlane test
 
 
 .PHONY: format
@@ -24,3 +26,14 @@ generate-l10n:
 		--param publicAccess=true \
 		./TvMazeAppLib/Sources/L10n \
 		--output ./TvMazeAppLib/Sources/L10n/L10n.swift
+
+.PHONY: secrets
+secrets:
+	@echo "$$SECRETS" > ./App/TvMazeApp/Secrets.swift
+
+define SECRETS
+enum Secrets {
+  static let sentryDsn = "$(SENTRY_DSN)"
+}
+endef
+export SECRETS

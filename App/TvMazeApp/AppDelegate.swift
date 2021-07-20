@@ -6,7 +6,14 @@
 //
 
 import AppFeature
+import Sentry
 import UIKit
+
+#if DEBUG
+  let isDebug = true
+#else
+  let isDebug = false
+#endif
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,6 +25,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+
+    SentrySDK.start { options in
+      options.dsn = Secrets.sentryDsn
+      options.debug = isDebug
+    }
+
     window = UIWindow(frame: UIScreen.main.bounds)
     appCoordinator = AppCoordinator(window: window!)
     appCoordinator.start()

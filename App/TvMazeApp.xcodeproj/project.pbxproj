@@ -11,6 +11,8 @@
 		796AD38B2633350300240507 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796AD38A2633350300240507 /* AppDelegate.swift */; };
 		796AD3942633350300240507 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 796AD3932633350300240507 /* Assets.xcassets */; };
 		796AD3972633350300240507 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 796AD3952633350300240507 /* LaunchScreen.storyboard */; };
+		79C6855A26A6C1B2001B90AE /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 79C6855926A6C1B2001B90AE /* Sentry */; };
+		79C6855C26A6C1ED001B90AE /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C6855B26A6C1ED001B90AE /* Secrets.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +21,7 @@
 		796AD3932633350300240507 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		796AD3962633350300240507 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		796AD3982633350300240507 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		79C6855B26A6C1ED001B90AE /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,6 +30,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7952C8142636C7E600DBB4AD /* AppFeature in Frameworks */,
+				79C6855A26A6C1B2001B90AE /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,6 +61,7 @@
 				796AD3932633350300240507 /* Assets.xcassets */,
 				796AD3952633350300240507 /* LaunchScreen.storyboard */,
 				796AD3982633350300240507 /* Info.plist */,
+				79C6855B26A6C1ED001B90AE /* Secrets.swift */,
 			);
 			path = TvMazeApp;
 			sourceTree = "<group>";
@@ -86,6 +91,7 @@
 			name = TvMazeApp;
 			packageProductDependencies = (
 				7952C8132636C7E600DBB4AD /* AppFeature */,
+				79C6855926A6C1B2001B90AE /* Sentry */,
 			);
 			productName = TvMazeApp;
 			productReference = 796AD3872633350300240507 /* TvMazeApp.app */;
@@ -114,6 +120,9 @@
 				Base,
 			);
 			mainGroup = 796AD37E2633350200240507;
+			packageReferences = (
+				79C6855826A6C1B2001B90AE /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
+			);
 			productRefGroup = 796AD3882633350300240507 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -141,6 +150,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				796AD38B2633350300240507 /* AppDelegate.swift in Sources */,
+				79C6855C26A6C1ED001B90AE /* Secrets.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,10 +349,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		79C6855826A6C1B2001B90AE /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.1.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		7952C8132636C7E600DBB4AD /* AppFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppFeature;
+		};
+		79C6855926A6C1B2001B90AE /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 79C6855826A6C1B2001B90AE /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
